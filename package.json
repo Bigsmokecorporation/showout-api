@@ -1,0 +1,35 @@
+{
+  "name": "showout-api",
+  "version": "1.0.0",
+  "description": "ShowOut API gateway",
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_ENV=local mocha test/alltests.js --exit",
+    "start": "cross-env NODE_ENV=local nodemon ."
+  },
+  "author": "Kwame Twum",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-http-context": "^1.2.4",
+    "helmet": "^6.0.0",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "winston-rotating-file": "^0.2.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.41.0",
+    "eslint": "^8.26.0",
+    "eslint-config-standard-with-typescript": "^23.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.3.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "nodemon": "^2.0.20",
+    "typescript": "^4.8.4"
+  }
+}
