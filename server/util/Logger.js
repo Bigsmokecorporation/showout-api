@@ -31,6 +31,7 @@ const logger = winston.createLogger({
     ),
     transports: [console],
     exceptionHandlers: [
+        console,
         exceptionTransport
     ]
 });

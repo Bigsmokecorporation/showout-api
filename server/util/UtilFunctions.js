@@ -1,53 +1,52 @@
-import ShowOutError from "./ShowOutError";
-import HTTPStatus from "./HttpStatus";
+import HTTPStatus from "./HttpStatus.js";
 
 class Utils {
 
-    static errorResponse () {
-        return JSON.parse(
-            JSON.stringify({
-                status: 0,
-                data: {},
-                message: ''
-            })
-        );
+    static outputError(res, message = 'An error occurred', statusCode = HTTPStatus.BAD_REQUEST) {
+        res.status(statusCode).json({
+            status: 0,
+            data: {},
+            message
+        });
     }
 
-    static successResponse () {
-        return JSON.parse(
-            JSON.stringify({
-                status: 1,
-                data: {},
-                message: ''
-            })
-        );
+    static outputSuccess(res, data = {}, message = 'Completed successfully', statusCode = HTTPStatus.OK) {
+        res.status(statusCode).json({
+            status: 0,
+            data,
+            message
+        });
     }
 
-    static sendResponse(error, data, res, successMessage, successMessageVars) {
-        let responseObject;
-        if (error) {
-            let status;
-            responseObject = Utils.errorResponse();
-            if (error instanceof ShowOutError) {
-                responseObject.message = error.message;
-                status = error.statusCode ? error.statusCode : HTTPStatus.BAD_REQUEST;
-                CONSOLE_LOGGER.info(error.message);
-            } else {
-                responseObject.message = res.__('ERROR_MSG');
-                status = HTTPStatus.INTERNAL_SERVER_ERROR;
-                CONSOLE_LOGGER.error(error);
-            }
-            responseObject.data = error.data;
-            res.status(status).send(responseObject);
-        } else {
-            responseObject = Utils.successResponse();
-            responseObject.message = successMessageVars
-                ? res.__.apply('', [successMessage].concat(successMessageVars))
-                : successMessage;
-            responseObject.data = data;
-            responseObject.newNotification = res.newNotification;
-            res.status(HTTPStatus.OK).send(responseObject);
+    static now(daysToAdd = 0) {
+        const d = new Date();
+        let mn = d.getMonth() + 1;
+        if (mn.toString().length === 1)
+            mn = `0${mn}`;
+        let day_ = d.getDate();
+        day_ = day_ + +daysToAdd;
+        if (day_.toString().length === 1)
+            day_ = `0${day_}`;
+        return `${d.getFullYear()}-${mn}-${day_}`;
+    }
+
+    static genId(length = 20) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let autoId = '';
+        for (let i = 0; i < length; i++) {
+            autoId += chars.charAt(Math.floor(Math.random() * chars.length));
         }
+        return autoId;
     }
+
+    static genOTP(length = 6) {
+        const chars = '0123456789';
+        let autoId = '';
+        for (let i = 0; i < length; i++) {
+            autoId += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return autoId;
+    }
+
 }
 export default Utils;
