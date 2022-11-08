@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 export default {
     LOG_LEVEL: 'debug',
     JSDOC_OPTIONS: {
@@ -10,8 +13,8 @@ export default {
             },
             servers: [
                 {
-                    url: 'https://api.x/',
-                        description: 'Staging server',
+                    url: process.env.BASE_URL,
+                    description: 'Staging server',
                 }
             ],
             security: [

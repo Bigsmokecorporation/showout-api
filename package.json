@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "NODE_ENV=local mocha test/tests.js --exit",
-    "start": "cross-env NODE_ENV=local nodemon ."
+    "start": "NODE_ENV=local nodemon ."
   },
   "author": "Kwame Twum",
   "license": "ISC",

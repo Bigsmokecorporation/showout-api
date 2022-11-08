@@ -38,29 +38,13 @@ app.use(cookieParser());
 const connectToDB = () => {
     DB = knex({
         client: 'pg',
-        connection: {
-            host : process.env.NODE_ENV === 'prod' ? process.env.PGHOST : 'localhost',
-            port : 5432,
-            user : process.env.NODE_ENV === 'prod' ? process.env.PGUSER : 'kwametwum',
-            password : process.env.PGPASSWORD,
-            database : process.env.PGDATABASE
-        },
-        // connection: process.env.CONN,
+        connection: process.env.CONN,
         searchPath: ['knex', 'public'],
-        // pool: {
-        //     min: 1,
-        //     max: 3,
-        //     acquireTimeoutMillis: 30000,
-        //     afterCreate: function (conn, done) {
-        //         conn.query('SET timezone="UTC";', function (err) {
-        //             if (err) {
-        //                 done(err, conn);
-        //             } else {
-        //                 console.log('All good')
-        //             }
-        //         });
-        //     }
-        // },
+        pool: {
+            min: 1,
+            max: 3,
+            acquireTimeoutMillis: 30000,
+        },
         acquireConnectionTimeout: 10000,
         migrations: {
             tableName: 'migrations'
@@ -71,16 +55,9 @@ connectToDB();
 
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(bodyParser.json({ limit: '50mb', extended: true }));
-const whitelist = ['https://example1.com', 'https://example2.com', undefined];
+
 app.use(cors({
-    origin: function (origin, callback) {
-        console.log(origin)
-        if (whitelist.indexOf(origin) !== -1) {
-            callback(null, true)
-        } else {
-            callback(new Error('Not allowed by SHOW OUT CORS'))
-        }
-    },
+    origin: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     exposedHeaders: ['x-auth-token']

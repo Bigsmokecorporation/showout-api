@@ -159,6 +159,6 @@ userRoutes.post("/update", Auth, UserController.update);
  *          path:
  *              type: string
  */
-userRoutes.post("/:id", Auth, UserController.get);
+userRoutes.get("/:id", UserController.get);
 
 export default userRoutes;
