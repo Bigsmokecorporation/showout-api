@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "NODE_ENV=local mocha test/tests.js --exit",
-    "start": "NODE_ENV=local nodemon ."
+    "debug": "nodemon index.js",
+    "start": "node index.js"
   },
   "author": "Kwame Twum",
   "license": "ISC",
