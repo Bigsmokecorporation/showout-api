@@ -61,7 +61,7 @@ authRoutes.post("/verify", UserController.create);
 
 /**
  * @swagger
- * /user/save:
+ * /user/update:
  *  put:
  *     tags:
  *       - User
@@ -120,7 +120,7 @@ authRoutes.post("/verify", UserController.create);
  *      200:
  *          description: Saves User.
  */
-userRoutes.post("/save", Auth, UserController.update);
+userRoutes.post("/update", Auth, UserController.update);
 
 /**
  * @swagger
