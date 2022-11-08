@@ -22,4 +22,6 @@ jobs:
         cache: 'npm'
     - name: Install dependencies
       run: npm install
+      env:
+        NODE_ENV: ci
     - run: npm test --if-present
