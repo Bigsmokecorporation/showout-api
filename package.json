@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "NODE_ENV=local mocha test/alltests.js --exit",
+    "test": "NODE_ENV=local mocha test/tests.js --exit",
     "start": "cross-env NODE_ENV=local nodemon ."
   },
   "author": "Kwame Twum",
@@ -14,6 +14,7 @@
     "@sendgrid/mail": "^7.7.0",
     "body-parser": "^1.20.1",
     "chai": "^4.3.7",
+    "chai-http": "^4.3.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -26,6 +27,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "pg": "^8.8.0",
+    "supertest": "^6.3.1",
     "swagger-jsdoc": "^6.2.5",
     "swagger-ui-express": "^4.5.0",
     "winston": "^3.8.2",
