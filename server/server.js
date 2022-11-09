@@ -5,7 +5,6 @@ import cookieParser from 'cookie-parser';
 import httpContext from 'express-http-context';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import helmet from 'helmet';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
@@ -31,7 +30,6 @@ global._ = _;
 global.ShowOutError = ShowOutError;
 
 app.use(compression());
-app.use(helmet());
 app.use(cookieParser());
 
 //  Connection
