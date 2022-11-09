@@ -32,6 +32,15 @@ global.ShowOutError = ShowOutError;
 app.use(compression());
 app.use(cookieParser());
 
+app.get('/', (req, res) => {
+    res.send({
+        status: 'ok',
+        date: MOMENT(),
+        visitor: req.ip,
+        version: 1.0
+    });
+});
+
 //  Connection
 const connectToDB = () => {
     DB = knex({
