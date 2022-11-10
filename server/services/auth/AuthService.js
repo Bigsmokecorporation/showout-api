@@ -11,7 +11,7 @@ import bCrypt from 'bcryptjs'
  */
 class AuthService {
 
-    static async login (rq, rs) {
+    static async login(rq, rs) {
         const {email, password} = rq.body
         const user = await UserModel.get(email, true)
         if (!user || !(await bCrypt.compare(password, user.password)))
@@ -26,20 +26,20 @@ class AuthService {
             return user
         }
     }
-    
-    static async loginWithApple (rq, rs) {
+
+    static async loginWithApple(rq, rs) {
         const {user_id, access_token, gcid} = rq.body
 
 
     }
 
-    static async loginWithFaceBook (rq, rs) {
+    static async loginWithFaceBook(rq, rs) {
         const {user_id, access_token, gcid} = rq.body
         const url = `https://graph.facebook.com/v9.0/${user_id}/?fields=id,name,email&access_token=${access_token}`
 
     }
 
-    static async loginWithGoogle (rq, rs) {
+    static async loginWithGoogle(rq, rs) {
         const client = new OAuth2Client(process.env.GOOGLE_CLIENT)
         const {access_token, gcid} = rq.body
         const ticket = await client.verifyIdToken({
@@ -52,6 +52,19 @@ class AuthService {
         const payload = ticket.getPayload()
         console.log(payload)
         const userid = payload['sub']
+    }
+
+    static async verify(rq, rs) {
+        const {id, token} = rq.body
+        const hasPendingVerification = await UserModel.hasPendingVerification(id)
+        if (hasPendingVerification) {
+            const valid = await UserModel.validateVerificationToken(id, token)
+            if (valid)
+                await UserModel.update(id, {is_active: valid})
+            else
+                throw new ShowOutError('Token verification failed')
+        } else
+            throw new ShowOutError(`There's no pending verification for this user`)
     }
 }
 

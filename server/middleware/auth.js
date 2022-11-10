@@ -5,8 +5,9 @@ import jwt from "jsonwebtoken";
 
 export default (rq, rs, next) => {
     const token = rq.headers['authorization']
-    if (!token)
-        return UtilFunctions.outputError(rs, 'An authorization token is required for authentication', HttpStatus.UNAUTHORIZED)
+    const key = rq.headers['x-api-key']
+    if (!token || key !== process.env.API_KEY)
+        return UtilFunctions.outputError(rs, 'Authorization tokens are required for authentication', HttpStatus.UNAUTHORIZED)
 
     jwt.verify(token.toString().substring(6).trim(), process.env.JWT, async (err, tokenData) => {
         if (!err) {

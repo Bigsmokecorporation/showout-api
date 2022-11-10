@@ -36,10 +36,10 @@ class UserModel {
             .where({is_active: true})
     }
 
-    static async update(id, data) {
+    static async update(id, data, returning = '*') {
         return DB('users')
             .where({id})
-            .returning('*')
+            .returning(returning)
             .update(data)
     }
 
@@ -70,14 +70,14 @@ class UserModel {
             .where({user_id})
             .update({verified})
     }
-    static async validateVerificationTokenOrOTP(user_id, token) {
-        let thisVerification = await UserModel.getVerificationTokenOrOTP(token)
+    static async validateVerificationToken(user_id, token) {
+        let thisVerification = await UserModel.getVerificationToken(token)
         if (thisVerification && !thisVerification.err) {
-            return thisVerification[0].user_id === user_id
+            return thisVerification.user_id === user_id
         }
         return false
     }
-    static async getVerificationTokenOrOTP(token) {
+    static async getVerificationToken(token) {
         let thisVerification = await DB('verifications').select('*').where({token})
         if (thisVerification && !thisVerification.err) {
             return thisVerification[0]

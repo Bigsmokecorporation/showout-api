@@ -161,5 +161,39 @@ export default (swagger) => {
             }
         }
     }
+
+    swagger.paths['/auth/verify'] = {
+        post: {
+            tags: [
+                'Auth'
+            ],
+            description: 'Verifies email token',
+            requestBody: {
+                content: {
+                    'application/json': {
+                        schema: {
+                            type: 'object',
+                            properties: {
+                                id: {
+                                    type: 'string',
+                                    description: 'Id of user',
+                                    example: 'gfdrsew454678907ytyr'
+                                },
+                                token: {
+                                    type: 'string',
+                                    example: 123456
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            responses: {
+                200: {
+                    description: 'Successful verification.'
+                }
+            }
+        }
+    }
     return swagger
 }

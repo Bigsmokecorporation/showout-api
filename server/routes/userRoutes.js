@@ -5,8 +5,6 @@ const userRoutes = Router();
 
 userRoutes.post("/create", UserController.create);
 
-userRoutes.post("/verify", UserController.create);
-
 userRoutes.put("/update", Auth, UserController.update);
 
 userRoutes.get("/:id", Auth, UserController.get);
