@@ -12,12 +12,12 @@ export default (rq, rs, next) => {
         if (!err) {
             const account = await UserModel.get(tokenData.id)
             if (account)
-                rs.locals.user = await UserModel.get(tokenData.id)
+                rs.locals.user = account
             else
-                return Utils.outputError(rs, 'An authorization token is required for authentication', HttpStatus.UNAUTHORIZED)
+                return UtilFunctions.outputError(rs, 'An authorization token is required for authentication', HttpStatus.UNAUTHORIZED)
+            console.log('authenticated')
+            return next()
         } else
-            return Utils.outputError(rs, 'An authorization token is required for authentication', HttpStatus.UNAUTHORIZED)
+            return UtilFunctions.outputError(rs, 'An authorization token is required for authentication', HttpStatus.UNAUTHORIZED)
     })
-    console.log('authenticated')
-    return next()
 }

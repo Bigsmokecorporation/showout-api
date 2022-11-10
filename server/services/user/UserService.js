@@ -17,7 +17,7 @@ class UserService {
                 await EmailModel.sendVerificationMail(current_user.id, current_user.full_name, pendingVerification[0].token)
                 return UtilFunctions.outputError(rs, "Account already exists. Please check your mail to continue", HttpStatus.CONFLICT)
             } else
-                return UtilFunctions.outputError(rs, "Account already exists. Please login", HttpStatus.CONFLICT)
+                throw new ShowOutError("Account already exists. Please login", HttpStatus.CONFLICT)
 
         } else {
 
@@ -43,10 +43,15 @@ class UserService {
     }
 
     static async update (data, rs, user) {
-        await self.save(user.id, data)
+        const updated_user = await self.update(user.id, data)
+        if (updated_user) {
+            delete updated_user[0].password
+            return updated_user[0];
+        }
+        return []
     }
 
-    static async get (rs, user) {
+    static async get (rq, user) {
         return self.get(user.id, false)
     }
 

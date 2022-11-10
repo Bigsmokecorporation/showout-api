@@ -19,10 +19,62 @@ export default {
             ],
             security: [
                 {
-                    bearerAuth: []
+                    bearerAuth: {
+                        "name": "Authorization",
+                        "type": "apiKey",
+                        "in": "header",
+                    }
                 }
             ]
         },
         apis: ['./server/routes/*.js'],
     },
+    DOCS: {
+        'openapi': '3.0.0',
+        'info': {
+            'title': 'ShowOut API',
+            'version': '1.0.0'
+        },
+        'servers': [
+            {
+                'url': process.env.BASE_URL,
+                'description': 'Staging server'
+            }
+        ],
+        'paths': {},
+        components: {
+            schemas: {
+                Success: {
+                    type: 'object',
+                    properties: {
+                        status: {
+                            type: 'integer',
+                            example: 1
+                        },
+                        data: {
+                            type: 'object'
+                        },
+                        message: {
+                            type: 'string'
+                        },
+                    }
+                },
+                Error: {
+                    type: 'object',
+                    properties: {
+                        status: {
+                            type: 'integer',
+                            example: 0
+                        },
+                        data: {
+                            type: 'object'
+                        },
+                        message: {
+                            type: 'string'
+                        },
+                    }
+                },
+            }
+        }
+    }
 };

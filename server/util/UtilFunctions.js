@@ -12,10 +12,24 @@ class Utils {
 
     static outputSuccess(res, data = {}, message = 'Completed successfully', statusCode = HTTPStatus.OK) {
         res.status(statusCode).json({
-            status: 0,
-            data,
+            status: 1,
+            data: Utils._clearNulls(data),
             message
         });
+    }
+
+    static _clearNulls (data) {
+        let fileKeys = Array.isArray(data) ? data : Object.keys(data);
+        fileKeys.forEach((key) => {
+            if (data[key] === null) {
+                delete data[key];
+            } else {
+                if (typeof data[key] === 'object') {
+                    data[key] = Utils._clearNulls(data[key]);
+                }
+            }
+        });
+        return data;
     }
 
     static now(daysToAdd = 0) {

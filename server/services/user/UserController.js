@@ -31,15 +31,15 @@ class UserController {
      * @param {Object} rs Response
      */
     static async create(rq, rs) {
-        const {full_name, email} = rq.body;
-        if (!(email && full_name))
+        const {full_name, email, stage_name, password} = rq.body;
+        if (!(email && full_name && stage_name && password))
             UtilFunctions.outputError(rs, "All items are required");
 
         try {
             const data = await UserService.create(rq.body, rs);
             UtilFunctions.outputSuccess(rs, data)
         } catch (error) {
-            WRITE.error(`Getting error while Gets user details. Error stack: ${error.stack}`);
+            WRITE.error(`Failed to create user. Error stack: ${error.stack}`);
             UtilFunctions.outputError(rs, error.message);
         }
     }
@@ -52,10 +52,17 @@ class UserController {
      * @param {Object} rs Response
      */
     static async update(rq, rs) {
-        const {id} = rq.body;
-        if (!id) UtilFunctions.outputError(rs, "No user id specified");
-        const data = await UserService.update(rq.body, rs, rs.locals.user);
-        UtilFunctions.outputSuccess(rs, data)
+        const {admin, id} = rs.locals;
+        if (admin && !id)
+            return UtilFunctions.outputError(rs, "No user id specified");
+        try {
+            const data = await UserService.update(rq.body, rs, rs.locals.user);
+            UtilFunctions.outputSuccess(rs, data)
+        } catch (error) {
+            WRITE.error(`Failed to update user. Error stack: ${error.stack}`);
+            UtilFunctions.outputError(rs, error.message);
+        }
+
     }
 
 }

@@ -1,14 +1,16 @@
 import UtilFunctions from "../util/UtilFunctions.js"
 import jwt from "jsonwebtoken"
+import bCrypt from 'bcryptjs';
 
 class UserModel {
     static async create(data) {
+        data.password = await bCrypt.hash(data.password, 10);
         let new_user = await DB('users')
             .returning('*')
             .insert(data)
 
         if (new_user.length) {
-            new_user[0].token = jwt.sign({user_id: new_user.id}, process.env.JWT, {
+            new_user[0].token = jwt.sign({user_id: new_user[0].id}, process.env.JWT, {
                 algorithm: 'RS256',
                 expiresIn: "1h"
             }, (err, token) => console.log(token))
@@ -34,12 +36,12 @@ class UserModel {
             .where({is_active: true})
     }
 
-    static async save(id, data) {
+    static async update(id, data) {
         return DB('users')
             .where({id})
+            .returning('*')
             .update(data)
     }
-
 
 
     static async createVerification(user_id, token, type = 'email') {

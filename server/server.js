@@ -5,8 +5,6 @@ import cookieParser from 'cookie-parser';
 import httpContext from 'express-http-context';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import swaggerUi from 'swagger-ui-express';
-import swaggerJsdoc from 'swagger-jsdoc';
 
 dotenv.config();
 const app = express();
@@ -70,15 +68,14 @@ app.use(cors({
     exposedHeaders: ['x-auth-token']
 }));
 
-const swaggerSpec = swaggerJsdoc(CONSTANTS.JSDOC_OPTIONS);
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {explorer: true}));
 app.use(httpContext.middleware);
 
-
 //ROUTING
+import docRoutes from './routes/docRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 
+app.use('/docs', docRoutes);
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 
