@@ -184,6 +184,10 @@ export default (swagger) => {
                 type: 'boolean',
                 example: true
             },
+            email_verified: {
+                type: 'boolean',
+                example: true
+            },
             dob: {
                 type: 'string',
                 format: '$date',
@@ -208,8 +212,8 @@ export default (swagger) => {
         type: 'object',
         properties: {
             status: {
-                type: 'integer',
-                example: 1
+                type: 'string',
+                example: 'SUCCESS'
             },
             data: {
                 $ref: '#/components/schemas/User'
