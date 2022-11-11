@@ -3,6 +3,8 @@ import UserModel from "../../models/user.model.js"
 import randToken from "rand-token"
 import jwt from "jsonwebtoken"
 import bCrypt from 'bcryptjs'
+import HttpStatus from "../../util/HttpStatus.js";
+import ResponseCodes from "../../util/ResponseCodes.js";
 
 /**
  * Class represents user authentication services.
@@ -17,13 +19,21 @@ class AuthService {
         if (!user || !(await bCrypt.compare(password, user.password)))
             throw new ShowOutError('Please check and re-enter details correctly')
         else {
-            delete user.password
-            user.token = await jwt.sign({id: user.id}, process.env.JWT, {expiresIn: "1h"})
-            let refresh_token = randToken.uid(256)
-            user.refresh_token = refresh_token
-            await UserModel.update(user.id, {refresh_token})
-            rs.locals.user = user
-            return user
+            const hasPendingVerification = await UserModel.hasPendingVerification(user.id)
+            if (!user.email_verified && hasPendingVerification) {
+                // resend mail
+                // const pendingVerification = await UserModel.pendingVerification(current_user.id)
+                // await EmailModel.sendVerificationMail(user.id, current_user.full_name, pendingVerification[0].token)
+                throw new ShowOutError("Please check your mail for a verification code", ResponseCodes.VERIFICATION_PENDING, HttpStatus.FOUND)
+            } else {
+                delete user.password
+                user.token = await jwt.sign({id: user.id}, process.env.JWT, {expiresIn: '1h'})
+                let refresh_token = randToken.uid(256)
+                user.refresh_token = refresh_token
+                await UserModel.update(user.id, {refresh_token})
+                rs.locals.user = user
+                return user
+            }
         }
     }
 
@@ -59,10 +69,12 @@ class AuthService {
         const hasPendingVerification = await UserModel.hasPendingVerification(id)
         if (hasPendingVerification) {
             const valid = await UserModel.validateVerificationToken(id, token)
-            if (valid)
-                await UserModel.update(id, {is_active: valid})
+            if (valid) {
+                await UserModel.update(id, { is_active: valid, email_verified: valid })
+                await UserModel.updateVerificationStatus(id, valid)
+            }
             else
-                throw new ShowOutError('Token verification failed')
+                throw new ShowOutError('Token verification failed', ResponseCodes.INVALID_CODE)
         } else
             throw new ShowOutError(`There's no pending verification for this user`)
     }

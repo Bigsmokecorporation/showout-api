@@ -2,24 +2,18 @@ import self from '../../models/user.model.js'
 import UtilFunctions from "../../util/UtilFunctions.js"
 import HttpStatus from "../../util/HttpStatus.js"
 import EmailModel from "../../models/email.model.js"
+import ResponseCodes from "../../util/ResponseCodes.js";
+
 /**
  * Class represents services.
  */
 class UserService {
 
-    static async create (data, rs) {
+    static async create(data, rs) {
         let current_user = await self.get(data.email)
-        if (current_user) {
-            const hasPendingVerification = await self.hasPendingVerification(current_user.id)
-            if (hasPendingVerification) {
-                //resend mail
-                // const pendingVerification = await self.pendingVerification(current_user.id)
-                // await EmailModel.sendVerificationMail(current_user.id, current_user.full_name, pendingVerification[0].token)
-                return UtilFunctions.outputError(rs, "Account already exists. Please check your mail to continue", HttpStatus.CONFLICT)
-            } else
-                throw new ShowOutError("Account already exists. Please login", HttpStatus.CONFLICT)
-
-        } else {
+        if (current_user)
+            throw new ShowOutError("Account already exists. Please login", ResponseCodes.ALREADY_EXISTS, HttpStatus.CONFLICT)
+        else {
 
             // create
             let created_user = await self.create({...({id: UtilFunctions.genId()}), ...(data)})
@@ -42,7 +36,7 @@ class UserService {
 
     }
 
-    static async update (data, rs, user) {
+    static async update(data, rs, user) {
         const updated_user = await self.update(user.id, data)
         if (updated_user) {
             delete updated_user[0].password
@@ -51,11 +45,11 @@ class UserService {
         return []
     }
 
-    static async get (rq, user) {
+    static async get(rq, user) {
         return self.get(user.id, false)
     }
 
-    static async list () {
+    static async list() {
         return self.getMultiple()
     }
 }

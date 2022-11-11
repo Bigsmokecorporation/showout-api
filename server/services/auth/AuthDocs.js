@@ -27,8 +27,8 @@ export default (swagger) => {
                     }
                 }
             },
-            'responses': {
-                '200': {
+            responses: {
+                200: {
                     'description': 'Successful login.',
                     'content': {
                         'application/json': {
@@ -190,7 +190,14 @@ export default (swagger) => {
             },
             responses: {
                 200: {
-                    description: 'Successful verification.'
+                    description: 'Successful verification.',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                $ref: '#/components/schemas/Success'
+                            }
+                        }
+                    }
                 }
             }
         }

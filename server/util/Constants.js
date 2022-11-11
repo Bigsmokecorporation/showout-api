@@ -48,8 +48,8 @@ export default {
                     type: 'object',
                     properties: {
                         status: {
-                            type: 'integer',
-                            example: 1
+                            type: 'string',
+                            example: 'SUCCESS'
                         },
                         data: {
                             type: 'object'
@@ -63,8 +63,8 @@ export default {
                     type: 'object',
                     properties: {
                         status: {
-                            type: 'integer',
-                            example: 0
+                            type: 'string',
+                            example: 'FAILED'
                         },
                         data: {
                             type: 'object'

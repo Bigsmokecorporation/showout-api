@@ -1,10 +1,11 @@
 import HTTPStatus from "./HttpStatus.js";
+import ResponseCodes from "./ResponseCodes.js";
 
 class Utils {
 
-    static outputError(res, message = 'An error occurred', statusCode = HTTPStatus.BAD_REQUEST) {
+    static outputError(res, message = 'An error occurred', responseCode = ResponseCodes.FAILED, statusCode = HTTPStatus.BAD_REQUEST) {
         res.status(statusCode).json({
-            status: 0,
+            status: responseCode,
             data: {},
             message
         });
@@ -12,7 +13,7 @@ class Utils {
 
     static outputSuccess(res, data = {}, message = 'Completed successfully', statusCode = HTTPStatus.OK) {
         res.status(statusCode).json({
-            status: 1,
+            status: ResponseCodes.SUCCESS,
             data: Utils._clearNulls(data),
             message
         });

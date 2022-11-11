@@ -1,6 +1,7 @@
 export default class ShowOutError extends Error {
-    constructor (message, statusCode = 500) {
+    constructor (message, responseCode = 'FAILED', statusCode = 500) {
         super(message);
+        this.responseCode = responseCode;
         this.statusCode = statusCode;
     }
 }
