@@ -172,6 +172,10 @@ export default (swagger) => {
                 type: 'string',
                 example: 'Smooth'
             },
+            pass_code: {
+                type: 'string',
+                example: 123456
+            },
             photo_url: {
                 type: 'string',
                 example: 'https://ccc'
@@ -185,6 +189,10 @@ export default (swagger) => {
                 example: true
             },
             email_verified: {
+                type: 'boolean',
+                example: true
+            },
+            biometric_enabled: {
                 type: 'boolean',
                 example: true
             },
