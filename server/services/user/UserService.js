@@ -21,7 +21,7 @@ class UserService {
             if (created_user) {
 
                 //generate mail token
-                const email_token = 123456  //UtilFunctions.genOTP()
+                const email_token = 1234  //UtilFunctions.genOTP(4)
                 console.log(`Token generated: ${email_token}`)
 
                 await self.createVerification(created_user.id, email_token)

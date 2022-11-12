@@ -70,8 +70,8 @@ class AuthService {
         if (hasPendingVerification) {
             const valid = await UserModel.validateVerificationToken(id, token)
             if (valid) {
-                await UserModel.update(id, { is_active: valid, email_verified: valid })
                 await UserModel.updateVerificationStatus(id, valid)
+                return UserModel.update(id, { is_active: valid, email_verified: valid })
             }
             else
                 throw new ShowOutError('Token verification failed', ResponseCodes.INVALID_CODE)

@@ -70,7 +70,7 @@ class UserModel {
     static async updateVerificationStatus(user_id, verified = false) {
         return DB('verifications')
             .where({user_id})
-            .update({verified})
+            .update({verified, status: 'completed'})
     }
     static async validateVerificationToken(user_id, token) {
         let thisVerification = await UserModel.getVerificationToken(token)

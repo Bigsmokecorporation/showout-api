@@ -194,7 +194,7 @@ export default (swagger) => {
                     content: {
                         'application/json': {
                             schema: {
-                                $ref: '#/components/schemas/Success'
+                                $ref: '#/components/schemas/UserResponse'
                             }
                         }
                     }
