@@ -39,10 +39,11 @@ class UserModel {
     }
 
     static async update(id, data, returning = '*') {
-        return DB('users')
+        const user_arr = await DB('users')
             .where({id})
             .returning(returning)
             .update(data)
+        return user_arr[0];
     }
 
 
@@ -80,7 +81,7 @@ class UserModel {
         return false
     }
     static async getVerificationToken(token) {
-        let thisVerification = await DB('verifications').select('*').where({token})
+        let thisVerification = await DB('verifications').select('*').where({token, status: 'pending'})
         if (thisVerification && !thisVerification.err) {
             return thisVerification[0]
         }
