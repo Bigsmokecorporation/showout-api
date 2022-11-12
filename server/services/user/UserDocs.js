@@ -88,20 +88,16 @@ export default (swagger) => {
                                     format: 'binary'
                                 },
                                 pass_code: {
-                                    type: 'string',
-                                    format: 'binary'
+                                    type: 'string'
                                 },
                                 password: {
-                                    type: 'string',
-                                    format: 'binary'
+                                    type: 'string'
                                 },
                                 email: {
-                                    type: 'string',
-                                    format: 'binary'
+                                    type: 'string'
                                 },
                                 mobile_number: {
-                                    type: 'string',
-                                    format: 'binary'
+                                    type: 'string'
                                 }
                             }
                         }

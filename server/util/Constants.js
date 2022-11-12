@@ -4,6 +4,8 @@ dotenv.config();
 export default {
     LOG_LEVEL: 'debug',
     MAX_FILE_UPLOAD: 51000000,
+    BUCKET: 'user-gen-content',
+    S3: 'https://user-gen-content.s3.amazonaws.com/',
     DOCS: {
         'openapi': '3.0.0',
         'info': {

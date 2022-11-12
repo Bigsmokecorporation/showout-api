@@ -56,7 +56,7 @@ class UserController {
         if (admin && !id)
             return UtilFunctions.outputError(rs, "No user id specified");
         try {
-            const data = await UserService.update(rq.body, rs, rs.locals.user);
+            const data = await UserService.update(rq, rs, rs.locals.user);
             UtilFunctions.outputSuccess(rs, data)
         } catch (error) {
             WRITE.error(`Failed to update user. Error stack: ${error.stack}`);

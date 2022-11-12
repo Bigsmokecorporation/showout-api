@@ -3,6 +3,7 @@ import UtilFunctions from "../../util/UtilFunctions.js"
 import HttpStatus from "../../util/HttpStatus.js"
 import EmailModel from "../../models/email.model.js"
 import ResponseCodes from "../../util/ResponseCodes.js";
+import UploadService from "../../util/UploadService.js";
 
 /**
  * Class represents services.
@@ -36,9 +37,19 @@ class UserService {
 
     }
 
-    static async update(data, rs, user) {
+    static async update(req, rs, user) {
+        const data = req.body
+        if (!_.isEmpty(req.files)) {
+            if (_.has(req.files, 'photo')) {
+                const fileName = `photos/${user.id}`;
+                await UploadService.uploadFile(req.files.photo[0], fileName);
+                data.photo_url = `${CONSTANTS.S3}${fileName}`;
+            }
+        }
         const updated_user = await self.update(user.id, data)
         if (updated_user) {
+            if (updated_user.photo_url)
+                updated_user.photo_url = await UploadService.getSignedUrl(`photos/${user.id}`)
             delete updated_user.password
             delete updated_user.pass_code
             return updated_user;
