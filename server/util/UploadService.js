@@ -1,4 +1,4 @@
-import CONSTANTS from '../util/CONSTANTS.js'
+import CONSTANTS from '../util/Constants.js'
 import AWS from 'aws-sdk'
 
 const s3 = new AWS.S3({
