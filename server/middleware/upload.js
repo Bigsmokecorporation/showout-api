@@ -1,4 +1,4 @@
-import CONSTANTS from '../util/CONSTANTS.js';
+import CONSTANTS from '../util/Constants.js';
 import multer from 'multer';
 const storage = multer.memoryStorage({
     limits: {
