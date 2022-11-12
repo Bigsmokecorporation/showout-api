@@ -12,7 +12,7 @@ class UserService {
     static async create(data, rs) {
         let current_user = await self.get(data.email)
         if (current_user)
-            throw new ShowOutError("Account already exists. Please login", ResponseCodes.ALREADY_EXISTS, HttpStatus.CONFLICT)
+            throw new ShowOutError("Account already exists. Please login", {}, ResponseCodes.ALREADY_EXISTS, HttpStatus.CONFLICT)
         else {
 
             // create
@@ -39,8 +39,9 @@ class UserService {
     static async update(data, rs, user) {
         const updated_user = await self.update(user.id, data)
         if (updated_user) {
-            delete updated_user[0].password
-            return updated_user[0];
+            delete updated_user.password
+            delete updated_user.pass_code
+            return updated_user;
         }
         return []
     }
