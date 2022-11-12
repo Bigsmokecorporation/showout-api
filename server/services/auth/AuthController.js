@@ -17,7 +17,7 @@ class AuthController {
             UtilFunctions.outputSuccess(rs, data)
         } catch (error) {
             WRITE.error(`Login failed. Error stack: ${error.stack}`)
-            UtilFunctions.outputError(rs, error.message, error.responseCode)
+            UtilFunctions.outputError(rs, error.message, error.data || {}, error.responseCode)
         }
     }
 

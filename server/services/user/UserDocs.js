@@ -172,10 +172,6 @@ export default (swagger) => {
                 type: 'string',
                 example: 'Smooth'
             },
-            pass_code: {
-                type: 'string',
-                example: 123456
-            },
             photo_url: {
                 type: 'string',
                 example: 'https://ccc'

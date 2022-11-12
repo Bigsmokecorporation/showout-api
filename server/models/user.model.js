@@ -15,6 +15,7 @@ class UserModel {
                 expiresIn: "1h"
             }, (err, token) => console.log(token))
             delete new_user[0].password
+            delete new_user[0].pass_code
             return new_user[0]
         }
         return false
@@ -27,6 +28,7 @@ class UserModel {
             .orWhere({email: parameter})
         if (user.length) {
             if (!retainPassword) delete user[0].password
+            delete user[0].pass_code
         }
         return user[0]
     }

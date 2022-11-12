@@ -20,11 +20,11 @@ class AuthService {
             throw new ShowOutError('Please check and re-enter details correctly')
         else {
             const hasPendingVerification = await UserModel.hasPendingVerification(user.id)
-            if (!user.email_verified && hasPendingVerification) {
+            if (!user.email_verified || hasPendingVerification) {
                 // resend mail
                 // const pendingVerification = await UserModel.pendingVerification(current_user.id)
                 // await EmailModel.sendVerificationMail(user.id, current_user.full_name, pendingVerification[0].token)
-                throw new ShowOutError("Please check your mail for a verification code", ResponseCodes.VERIFICATION_PENDING, HttpStatus.FOUND)
+                throw new ShowOutError("Please check your mail for a verification code", user, ResponseCodes.VERIFICATION_PENDING, HttpStatus.FOUND)
             } else {
                 delete user.password
                 user.token = await jwt.sign({id: user.id}, process.env.JWT, {expiresIn: '1h'})

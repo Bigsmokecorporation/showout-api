@@ -30,7 +30,7 @@ class UserService {
                 // await EmailModel.sendVerificationMail(created_user.id, created_user.full_name, email_token)
                 return created_user
             } else {
-                UtilFunctions.outputError(rs, 'An error occurred', HttpStatus.INTERNAL_SERVER_ERROR)
+                UtilFunctions.outputError(rs, 'An error occurred', {}, HttpStatus.INTERNAL_SERVER_ERROR)
             }
         }
 

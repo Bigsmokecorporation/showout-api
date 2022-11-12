@@ -3,10 +3,10 @@ import ResponseCodes from "./ResponseCodes.js";
 
 class Utils {
 
-    static outputError(res, message = 'An error occurred', responseCode = ResponseCodes.FAILED, statusCode = HTTPStatus.BAD_REQUEST) {
+    static outputError(res, message = 'An error occurred', data = {}, responseCode = ResponseCodes.FAILED, statusCode = HTTPStatus.BAD_REQUEST) {
         res.status(statusCode).json({
             status: responseCode,
-            data: {},
+            data: Utils._clearNulls(data),
             message
         });
     }
