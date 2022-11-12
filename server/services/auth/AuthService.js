@@ -71,7 +71,13 @@ class AuthService {
             const valid = await UserModel.validateVerificationToken(id, token)
             if (valid) {
                 await UserModel.updateVerificationStatus(id, valid)
-                return UserModel.update(id, { is_active: valid, email_verified: valid })
+                const updated_user = await UserModel.update(id, { is_active: valid, email_verified: valid })
+                updated_user.token = await jwt.sign({id: updated_user.id}, process.env.JWT, {expiresIn: '1h'})
+                let refresh_token = randToken.uid(256)
+                updated_user.refresh_token = refresh_token
+                await UserModel.update(updated_user.id, {refresh_token})
+                rs.locals.user = updated_user
+                return updated_user
             }
             else
                 throw new ShowOutError('Token verification failed', ResponseCodes.INVALID_CODE)
