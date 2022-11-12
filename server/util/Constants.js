@@ -3,32 +3,7 @@ dotenv.config();
 
 export default {
     LOG_LEVEL: 'debug',
-    JSDOC_OPTIONS: {
-        failOnErrors: true,
-        definition: {
-            openapi: '3.0.0',
-            info: {
-                title: 'ShowOut API',
-                version: '1.0.0',
-            },
-            servers: [
-                {
-                    url: process.env.BASE_URL,
-                    description: 'Staging server',
-                }
-            ],
-            security: [
-                {
-                    bearerAuth: {
-                        "name": "Authorization",
-                        "type": "apiKey",
-                        "in": "header",
-                    }
-                }
-            ]
-        },
-        apis: ['./server/routes/*.js'],
-    },
+    MAX_FILE_UPLOAD: 51000000,
     DOCS: {
         'openapi': '3.0.0',
         'info': {

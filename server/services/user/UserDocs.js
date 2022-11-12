@@ -64,9 +64,46 @@ export default (swagger) => {
             description: 'Updates A User Account',
             requestBody: {
                 content: {
-                    'application/json': {
+                    'multipart/form-data': {
                         schema: {
-                            $ref: '#/components/schemas/User'
+                            type: 'object',
+                            properties: {
+                                full_name: {
+                                    type: 'string',
+                                },
+                                bio: {
+                                    type: 'string',
+                                },
+                                stage_name: {
+                                    type: 'string',
+                                },
+                                tag_name: {
+                                    type: 'string',
+                                },
+                                strap_line: {
+                                    type: 'string',
+                                },
+                                photo: {
+                                    type: 'string',
+                                    format: 'binary'
+                                },
+                                pass_code: {
+                                    type: 'string',
+                                    format: 'binary'
+                                },
+                                password: {
+                                    type: 'string',
+                                    format: 'binary'
+                                },
+                                email: {
+                                    type: 'string',
+                                    format: 'binary'
+                                },
+                                mobile_number: {
+                                    type: 'string',
+                                    format: 'binary'
+                                }
+                            }
                         }
                     }
                 }
