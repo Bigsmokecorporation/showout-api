@@ -7,4 +7,5 @@ authRoutes.post("/apple-login", AuthController.appleLogin);
 authRoutes.post("/facebook-login", AuthController.faceBookLogin);
 authRoutes.post("/google-login", AuthController.googleLogin);
 authRoutes.post("/verify", AuthController.verify);
+authRoutes.post("/refresh-token", AuthController.refreshToken);
 export default authRoutes;

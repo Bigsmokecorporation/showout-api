@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken"
 import bCrypt from 'bcryptjs'
 import HttpStatus from "../../util/HttpStatus.js";
 import ResponseCodes from "../../util/ResponseCodes.js";
+import UtilFunctions from "../../util/UtilFunctions.js";
 
 /**
  * Class represents user authentication services.
@@ -27,10 +28,8 @@ class AuthService {
                 throw new ShowOutError("Please check your mail for a verification code", user, ResponseCodes.VERIFICATION_PENDING, HttpStatus.FOUND)
             } else {
                 delete user.password
-                user.token = await jwt.sign({id: user.id}, process.env.JWT, {expiresIn: '6h'})
-                let refresh_token = randToken.uid(256)
-                user.refresh_token = refresh_token
-                await UserModel.update(user.id, {refresh_token})
+                await UtilFunctions.tokenizeUser(user)
+                await UserModel.update(user.id, {refresh_token: user.refresh_token})
                 rs.locals.user = user
                 return user
             }
@@ -71,18 +70,30 @@ class AuthService {
             const valid = await UserModel.validateVerificationToken(id, token)
             if (valid) {
                 await UserModel.updateVerificationStatus(id, valid)
-                const updated_user = await UserModel.update(id, { is_active: valid, email_verified: valid })
+                const updated_user = await UserModel.update(id, {is_active: valid, email_verified: valid})
                 updated_user.token = await jwt.sign({id: updated_user.id}, process.env.JWT, {expiresIn: '6h'})
                 let refresh_token = randToken.uid(256)
                 updated_user.refresh_token = refresh_token
                 await UserModel.update(updated_user.id, {refresh_token})
                 rs.locals.user = updated_user
                 return updated_user
-            }
-            else
+            } else
                 throw new ShowOutError('Token verification failed', ResponseCodes.INVALID_CODE)
         } else
             throw new ShowOutError(`There's no pending verification for this user`)
+    }
+
+    static async refreshToken(rq, rs, user) {
+        const {refresh_token} = rq.body;
+        if (user.refresh_token === refresh_token) {
+            await UtilFunctions.tokenizeUser(user)
+            await UserModel.update(user.id, {refresh_token: user.refresh_token})
+            return {
+                token: user.token,
+                refresh_token: user.refresh_token,
+            }
+        } else
+            throw new ShowOutError('Failed to validate refresh token', {}, ResponseCodes.INVALID_REFRESH_TOKEN)
     }
 }
 

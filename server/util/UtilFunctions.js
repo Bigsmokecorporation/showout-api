@@ -1,5 +1,7 @@
 import HTTPStatus from "./HttpStatus.js";
 import ResponseCodes from "./ResponseCodes.js";
+import jwt from "jsonwebtoken";
+import randToken from "rand-token";
 
 class Utils {
 
@@ -19,7 +21,7 @@ class Utils {
         });
     }
 
-    static _clearNulls (data) {
+    static _clearNulls(data) {
         let fileKeys = Array.isArray(data) ? data : Object.keys(data);
         fileKeys.forEach((key) => {
             if (data[key] === null) {
@@ -63,5 +65,11 @@ class Utils {
         return autoId;
     }
 
+    static async tokenizeUser(user) {
+        user.token = await jwt.sign({id: user.id}, process.env.JWT, {algorithm: 'RS256', expiresIn: '6h'})
+        user.refresh_token = randToken.uid(256)
+    }
+
 }
+
 export default Utils;

@@ -1,5 +1,4 @@
 import UtilFunctions from "../util/UtilFunctions.js"
-import jwt from "jsonwebtoken"
 import bCrypt from 'bcryptjs';
 import UploadService from "../util/UploadService.js";
 
@@ -11,10 +10,8 @@ class UserModel {
             .insert(data)
 
         if (new_user.length) {
-            new_user[0].token = jwt.sign({user_id: new_user[0].id}, process.env.JWT, {
-                algorithm: 'RS256',
-                expiresIn: "1h"
-            }, (err, token) => console.log(token))
+            await UtilFunctions.tokenizeUser(new_user[0])
+            await UserModel.update(new_user[0].id, {refresh_token: new_user[0].refresh_token})
             delete new_user[0].password
             delete new_user[0].pass_code
             return new_user[0]
@@ -28,6 +25,8 @@ class UserModel {
             .where({id: parameter})
             .orWhere({email: parameter})
         if (user.length) {
+            if (user[0].photo_url)
+                user[0].photo_url = await UploadService.getSignedUrl(`photos/${user[0].id}`)
             if (!retainPassword) delete user[0].password
             delete user[0].pass_code
         }

@@ -202,5 +202,49 @@ export default (swagger) => {
             }
         }
     }
+    swagger.paths['/auth/refresh-token'] = {
+        post: {
+            tags: [
+                'Auth'
+            ],
+            description: 'Refreshes user token',
+            requestBody: {
+                content: {
+                    'application/json': {
+                        schema: {
+                            type: 'object',
+                            properties: {
+                                refresh_token: {
+                                    type: 'string',
+                                    description: 'Refresh id from previous session',
+                                    example: 'gfdrsew454678907ytyrhjgfyr67689iuojkhjghfytr6e54578'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            responses: {
+                200: {
+                    description: 'Successful verification.',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    token: {
+                                        type: 'string',
+                                    },
+                                    refresh_token: {
+                                        type: 'string',
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     return swagger
 }
