@@ -50,7 +50,7 @@ class AuthService {
         let user = await self.get(payload.email)
         if (user) {
             user.new_social_login = false
-            if (gcid) await UserModel.update(payload.sub, {gcid})
+            if (gcid) await UserModel.update(payload.email, {gcid})
             return user
         } else {
             let created_user = await UserModel.create({
