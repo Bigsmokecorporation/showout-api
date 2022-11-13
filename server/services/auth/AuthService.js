@@ -38,8 +38,26 @@ class AuthService {
     }
 
     static async loginWithApple(rq, rs) {
-        const {user_id, access_token, gcid} = rq.body
-
+        const {full_name, email, gcid} = rq.body
+        let user = await self.get(email)
+        if (user) {
+            user.new_social_login = false
+            if (gcid) await UserModel.update(email, {gcid})
+            await UtilFunctions.tokenizeUser(user)
+            return user
+        } else {
+            let created_user = await UserModel.create({
+                id: UtilFunctions.genId(),
+                email,
+                full_name,
+                email_verified: true,
+                is_social_login: true,
+                social_login_token: 'apple',
+                ...(gcid && {gcid})
+            })
+            created_user.new_social_login = true
+            return created_user
+        }
 
     }
 
@@ -51,6 +69,7 @@ class AuthService {
         if (user) {
             user.new_social_login = false
             if (gcid) await UserModel.update(payload.email, {gcid})
+            await UtilFunctions.tokenizeUser(user)
             return user
         } else {
             let created_user = await UserModel.create({
@@ -83,6 +102,7 @@ class AuthService {
         if (user) {
             user.new_social_login = false
             if (gcid) await UserModel.update(payload.sub, {gcid})
+            await UtilFunctions.tokenizeUser(user)
             return user
         } else {
             let created_user = await UserModel.create({
