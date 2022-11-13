@@ -46,11 +46,11 @@ class AuthService {
     static async loginWithFaceBook(rq, rs) {
         const {user_id, access_token, gcid} = rq.body
         const url = `https://graph.facebook.com/v9.0/${user_id}/?fields=id,name,email,picture&access_token=${access_token}`
-        const payload = await Requests.get(url);
+        const payload = await Requests.get(url)
         let user = await self.get(payload.email)
         if (user) {
             user.new_social_login = false
-            await UserModel.update(payload.sub, {gcid})
+            if (gcid) await UserModel.update(payload.sub, {gcid})
             return user
         } else {
             let created_user = await UserModel.create({
@@ -61,7 +61,7 @@ class AuthService {
                 is_social_login: true,
                 social_login_token: 'facebook',
                 ...(payload.picture && {photo_url: payload.picture.data.url}),
-                gcid
+                ...(gcid && {gcid})
             })
             created_user.new_social_login = true
             return created_user
@@ -82,7 +82,7 @@ class AuthService {
         let user = await self.get(payload.email)
         if (user) {
             user.new_social_login = false
-            await UserModel.update(payload.sub, {gcid})
+            if (gcid) await UserModel.update(payload.sub, {gcid})
             return user
         } else {
             let created_user = await UserModel.create({
@@ -93,7 +93,7 @@ class AuthService {
                 is_social_login: true,
                 social_login_token: 'google',
                 ...(payload.picture && {photo_url: payload.picture}),
-                gcid
+                ...(gcid && {gcid})
             })
             created_user.new_social_login = true
             return created_user
