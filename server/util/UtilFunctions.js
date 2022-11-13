@@ -66,7 +66,7 @@ class Utils {
     }
 
     static async tokenizeUser(user) {
-        user.token = await jwt.sign({id: user.id}, process.env.JWT, {algorithm: 'RS256', expiresIn: '6h'})
+        user.token = await jwt.sign({id: user.id}, process.env.JWT, {algorithm: 'HS256', expiresIn: '6h'})
         user.refresh_token = randToken.uid(256)
     }
 
