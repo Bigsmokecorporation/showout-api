@@ -27,7 +27,7 @@ class AuthService {
                 throw new ShowOutError("Please check your mail for a verification code", user, ResponseCodes.VERIFICATION_PENDING, HttpStatus.FOUND)
             } else {
                 delete user.password
-                user.token = await jwt.sign({id: user.id}, process.env.JWT, {expiresIn: '1h'})
+                user.token = await jwt.sign({id: user.id}, process.env.JWT, {expiresIn: '6h'})
                 let refresh_token = randToken.uid(256)
                 user.refresh_token = refresh_token
                 await UserModel.update(user.id, {refresh_token})
@@ -72,7 +72,7 @@ class AuthService {
             if (valid) {
                 await UserModel.updateVerificationStatus(id, valid)
                 const updated_user = await UserModel.update(id, { is_active: valid, email_verified: valid })
-                updated_user.token = await jwt.sign({id: updated_user.id}, process.env.JWT, {expiresIn: '1h'})
+                updated_user.token = await jwt.sign({id: updated_user.id}, process.env.JWT, {expiresIn: '6h'})
                 let refresh_token = randToken.uid(256)
                 updated_user.refresh_token = refresh_token
                 await UserModel.update(updated_user.id, {refresh_token})

@@ -47,14 +47,9 @@ class UserService {
             }
         }
         const updated_user = await self.update(user.id, data)
-        if (updated_user) {
-            if (updated_user.photo_url)
-                updated_user.photo_url = await UploadService.getSignedUrl(`photos/${user.id}`)
-            delete updated_user.password
-            delete updated_user.pass_code
+        if (updated_user)
             return updated_user;
-        }
-        return []
+        throw new ShowOutError('Update failed')
     }
 
     static async get(rq, user) {

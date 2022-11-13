@@ -1,6 +1,7 @@
 import UtilFunctions from "../util/UtilFunctions.js"
 import jwt from "jsonwebtoken"
 import bCrypt from 'bcryptjs';
+import UploadService from "../util/UploadService.js";
 
 class UserModel {
     static async create(data) {
@@ -39,11 +40,18 @@ class UserModel {
     }
 
     static async update(id, data, returning = '*') {
-        const user_arr = await DB('users')
+        const user = await DB('users')
             .where({id})
             .returning(returning)
             .update(data)
-        return user_arr[0];
+        if (user.length) {
+            if (user[0].photo_url)
+                user[0].photo_url = await UploadService.getSignedUrl(`photos/${id}`)
+            delete user[0].password
+            delete user[0].pass_code
+            return user[0];
+        }
+        return false;
     }
 
 
