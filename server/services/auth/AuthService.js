@@ -1,11 +1,12 @@
 import {OAuth2Client} from 'google-auth-library'
 import UserModel from "../../models/user.model.js"
-import randToken from "rand-token"
-import jwt from "jsonwebtoken"
 import bCrypt from 'bcryptjs'
 import HttpStatus from "../../util/HttpStatus.js";
 import ResponseCodes from "../../util/ResponseCodes.js";
 import UtilFunctions from "../../util/UtilFunctions.js";
+import EmailModel from "../../models/email.model.js";
+import Requests from "../../util/Requests.js";
+import self from "../../models/user.model.js";
 
 /**
  * Class represents user authentication services.
@@ -44,8 +45,27 @@ class AuthService {
 
     static async loginWithFaceBook(rq, rs) {
         const {user_id, access_token, gcid} = rq.body
-        const url = `https://graph.facebook.com/v9.0/${user_id}/?fields=id,name,email&access_token=${access_token}`
-
+        const url = `https://graph.facebook.com/v9.0/${user_id}/?fields=id,name,email,picture&access_token=${access_token}`
+        const payload = await Requests.get(url);
+        let user = await self.get(payload.email)
+        if (user) {
+            user.new_social_login = false
+            await UserModel.update(payload.sub, {gcid})
+            return user
+        } else {
+            let created_user = await UserModel.create({
+                id: UtilFunctions.genId(),
+                email: payload.email,
+                full_name: payload.name,
+                email_verified: true,
+                is_social_login: true,
+                social_login_token: 'facebook',
+                ...(payload.picture && {photo_url: payload.picture.data.url}),
+                gcid
+            })
+            created_user.new_social_login = true
+            return created_user
+        }
     }
 
     static async loginWithGoogle(rq, rs) {
@@ -59,8 +79,25 @@ class AuthService {
             ]
         })
         const payload = ticket.getPayload()
-        console.log(payload)
-        const userid = payload['sub']
+        let user = await self.get(payload.email)
+        if (user) {
+            user.new_social_login = false
+            await UserModel.update(payload.sub, {gcid})
+            return user
+        } else {
+            let created_user = await UserModel.create({
+                id: payload.sub,
+                email: payload.email,
+                full_name: payload.name,
+                email_verified: true,
+                is_social_login: true,
+                social_login_token: 'google',
+                ...(payload.picture && {photo_url: payload.picture}),
+                gcid
+            })
+            created_user.new_social_login = true
+            return created_user
+        }
     }
 
     static async verify(rq, rs) {
@@ -71,10 +108,8 @@ class AuthService {
             if (valid) {
                 await UserModel.updateVerificationStatus(id, valid)
                 const updated_user = await UserModel.update(id, {is_active: valid, email_verified: valid})
-                updated_user.token = await jwt.sign({id: updated_user.id}, process.env.JWT, {expiresIn: '6h'})
-                let refresh_token = randToken.uid(256)
-                updated_user.refresh_token = refresh_token
-                await UserModel.update(updated_user.id, {refresh_token})
+                await UtilFunctions.tokenizeUser(updated_user)
+                await UserModel.update(updated_user.id, {refresh_token: updated_user.refresh_token})
                 rs.locals.user = updated_user
                 return updated_user
             } else
@@ -94,17 +129,16 @@ class AuthService {
             throw new ShowOutError('Failed to validate refresh token', {}, ResponseCodes.INVALID_REFRESH_TOKEN)
     }
 
-    static async forgotPassword(rq, rs, user) {
-        // const {refresh_token} = rq.body;
-        // if (user.refresh_token === refresh_token) {
-        //     await UtilFunctions.tokenizeUser(user)
-        //     await UserModel.update(user.id, {refresh_token: user.refresh_token})
-        //     return {
-        //         token: user.token,
-        //         refresh_token: user.refresh_token,
-        //     }
-        // } else
-        //     throw new ShowOutError('Failed to validate refresh token', {}, ResponseCodes.INVALID_REFRESH_TOKEN)
+    static async forgotPassword(rq, rs) {
+        const {email} = rq.body
+        const user = await UserModel.get(email)
+        let token = UtilFunctions.genId(30)
+        await self.createVerification(user.id, token)
+        await EmailModel.sendMailUsingTemplate(process.env.PASS_RESET_TMP, user.id, {
+            id: user.id,
+            token: token
+        }, email);
+
     }
 }
 

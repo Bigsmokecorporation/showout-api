@@ -4,7 +4,7 @@ import UploadService from "../util/UploadService.js";
 
 class UserModel {
     static async create(data) {
-        data.password = await bCrypt.hash(data.password, 10);
+        if (data.password) data.password = await bCrypt.hash(data.password, 10);
         let new_user = await DB('users')
             .returning('*')
             .insert(data)
@@ -25,7 +25,7 @@ class UserModel {
             .where({id: parameter})
             .orWhere({email: parameter})
         if (user.length) {
-            if (user[0].photo_url)
+            if (user[0].photo_url && !user[0].is_social_login)
                 user[0].photo_url = await UploadService.getSignedUrl(`photos/${user[0].id}`)
             if (!retainPassword) delete user[0].password
             delete user[0].pass_code
@@ -38,14 +38,15 @@ class UserModel {
             .where({is_active: true})
     }
 
-    static async update(id, data, returning = '*') {
+    static async update(parameter, data, returning = '*') {
         const user = await DB('users')
-            .where({id})
+            .where({id: parameter})
+            .orWhere({email: parameter})
             .returning(returning)
             .update(data)
         if (user.length) {
-            if (user[0].photo_url)
-                user[0].photo_url = await UploadService.getSignedUrl(`photos/${id}`)
+            if (user[0].photo_url && !user[0].is_social_login)
+                user[0].photo_url = await UploadService.getSignedUrl(`photos/${user[0].id}`)
             delete user[0].password
             delete user[0].pass_code
             return user[0];
