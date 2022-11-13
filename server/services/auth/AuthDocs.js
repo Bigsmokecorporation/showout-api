@@ -12,10 +12,12 @@ export default (swagger) => {
                             type: 'object',
                             properties: {
                                 email: {
-                                    type: 'string'
+                                    type: 'string',
+                                    example: 'bstoney7@gmail.com'
                                 },
                                 password: {
-                                    type: 'string'
+                                    type: 'string',
+                                    example: '123456'
                                 },
                                 gcid: {
                                     type: 'string',
@@ -177,7 +179,7 @@ export default (swagger) => {
                                 id: {
                                     type: 'string',
                                     description: 'Id of user',
-                                    example: 'gfdrsew454678907ytyr'
+                                    example: 'fc4y04sK9OiFjcbFZKB1'
                                 },
                                 token: {
                                     type: 'string',
@@ -214,6 +216,10 @@ export default (swagger) => {
                         schema: {
                             type: 'object',
                             properties: {
+                                id: {
+                                    type: 'string',
+                                    example: 'fc4y04sK9OiFjcbFZKB1'
+                                },
                                 refresh_token: {
                                     type: 'string',
                                     description: 'Refresh id from previous session',
@@ -230,15 +236,7 @@ export default (swagger) => {
                     content: {
                         'application/json': {
                             schema: {
-                                type: 'object',
-                                properties: {
-                                    token: {
-                                        type: 'string',
-                                    },
-                                    refresh_token: {
-                                        type: 'string',
-                                    }
-                                }
+                                $ref: '#/components/schemas/UserResponse'
                             }
                         }
                     }

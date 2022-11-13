@@ -22,7 +22,7 @@ class EmailModel {
             "</div> </div> </div> </body>"
     }
 
-    static async sendTmpMail(templateId, user_id, data, email = undefined) {
+    static async sendMailUsingTemplate(templateId, user_id, data, email = undefined) {
         let personalizations = []
         if (!email) {
             let user_ = await UserModel.get(user_id)
@@ -53,7 +53,7 @@ class EmailModel {
         if (user.is_active)
             verificationTemplate = process.env.POST_SIGN_UP_OTP_VERIFICATION_TMP
 
-        await EmailModel.sendTmpMail(verificationTemplate, user_id, {
+        await EmailModel.sendMailUsingTemplate(verificationTemplate, user_id, {
             full_name: user.full_name,
             token
         }, user.email)

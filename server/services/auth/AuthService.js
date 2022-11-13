@@ -83,17 +83,28 @@ class AuthService {
             throw new ShowOutError(`There's no pending verification for this user`)
     }
 
-    static async refreshToken(rq, rs, user) {
-        const {refresh_token} = rq.body;
+    static async refreshToken(rq, rs) {
+        const {id, refresh_token} = rq.body;
+        const user = await UserModel.get(id)
         if (user.refresh_token === refresh_token) {
             await UtilFunctions.tokenizeUser(user)
             await UserModel.update(user.id, {refresh_token: user.refresh_token})
-            return {
-                token: user.token,
-                refresh_token: user.refresh_token,
-            }
+            return user
         } else
             throw new ShowOutError('Failed to validate refresh token', {}, ResponseCodes.INVALID_REFRESH_TOKEN)
+    }
+
+    static async forgotPassword(rq, rs, user) {
+        // const {refresh_token} = rq.body;
+        // if (user.refresh_token === refresh_token) {
+        //     await UtilFunctions.tokenizeUser(user)
+        //     await UserModel.update(user.id, {refresh_token: user.refresh_token})
+        //     return {
+        //         token: user.token,
+        //         refresh_token: user.refresh_token,
+        //     }
+        // } else
+        //     throw new ShowOutError('Failed to validate refresh token', {}, ResponseCodes.INVALID_REFRESH_TOKEN)
     }
 }
 

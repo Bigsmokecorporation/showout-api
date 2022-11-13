@@ -1,5 +1,6 @@
 import AuthService from './AuthService.js'
 import UtilFunctions from "../../util/UtilFunctions.js"
+import EmailModel from "../../models/email.model.js";
 
 /**
  * Class represents user authentication.
@@ -80,7 +81,7 @@ class AuthController {
             UtilFunctions.outputError(rs, "Please specify refresh token")
 
         try {
-            const data = await AuthService.verify(rq, rs)
+            const data = await AuthService.refreshToken(rq, rs)
             UtilFunctions.outputSuccess(rs, data)
         } catch (error) {
             WRITE.error(`Refreshing token failed. Error stack: ${error.stack}`)
