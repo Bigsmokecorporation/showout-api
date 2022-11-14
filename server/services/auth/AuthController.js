@@ -23,8 +23,8 @@ class AuthController {
     }
 
     static async appleLogin(rq, rs) {
-        if (!rq.body.access_token)
-            UtilFunctions.outputError(rs, "Please specify token")
+        if (!(rq.body.access_token))
+            return UtilFunctions.outputError(rs, "Please specify access_token")
 
         try {
             const data = await AuthService.loginWithApple(rq, rs)
@@ -85,6 +85,19 @@ class AuthController {
             UtilFunctions.outputSuccess(rs, data)
         } catch (error) {
             WRITE.error(`Refreshing token failed. Error stack: ${error.stack}`)
+            UtilFunctions.outputError(rs, error.message, {}, error.responseCode)
+        }
+    }
+
+    static async forgotPassword(rq, rs) {
+        const {email} = rq.body
+        if (!email)
+            UtilFunctions.outputError(rs, "Email is required");
+        try {
+            const data = await AuthService.forgotPassword(rq, rs)
+            UtilFunctions.outputSuccess(rs, data, 'Check email for a password reset link')
+        } catch (error) {
+            WRITE.error(`Password rest failed. Error stack: ${error.stack}`)
             UtilFunctions.outputError(rs, error.message, {}, error.responseCode)
         }
     }
