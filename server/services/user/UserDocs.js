@@ -209,11 +209,15 @@ export default (swagger) => {
                 type: 'string',
                 example: 'https://ccc'
             },
-            is_social_login:{
+            is_social_login: {
                 type: 'boolean',
                 example: false
             },
-            social_login_token:{
+            new_social_login: {
+                type: 'boolean',
+                example: false
+            },
+            social_login_token: {
                 type: 'string',
                 example: 'google'
             },
