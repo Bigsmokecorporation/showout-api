@@ -19,11 +19,12 @@ class AdminService {
      */
     static async login(rq, rs) {
         const {email, password} = rq.body
-        const admin = await AdminModel.get(email, true)
+        const admin = await AdminModel.get(email)
 
         if (!admin || !(await bCrypt.compare(password, admin.password)))
             throw new ShowOutError('Please check and re-enter details correctly')
         else {
+            delete admin.password
             await UtilFunctions.tokenizeUser(admin)
             await AdminModel.update(admin.id, {refresh_token: admin.refresh_token})
             rs.locals.admin = admin

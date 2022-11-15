@@ -21,8 +21,9 @@ class AdminModel {
     static async get(parameter, retainPassword = false) {
         let admin = await DB.select('*')
             .from('admins')
-            .where({id: parameter})
-            .orWhere({email: parameter})
+            .leftJoin('roles', 'admins.role_id', 'roles.id')
+            // .where({id: parameter})
+            .where({email: parameter})
         if (admin.length) {
             if (!retainPassword) delete admin[0].password
         }

@@ -98,9 +98,26 @@ export default (swagger) => {
             },
             role_id: {
                 type: 'string',
-                enum: [
-                    'corporate', 'individual'
-                ]
+                example: 'fdre6r7687980iojhk'
+            },
+            is_active: {
+                type: 'boolean'
+            },
+            role_name: {
+                type: 'string',
+                example: 'Super Admin'
+            },
+            can_manage_admins: {
+                type: 'boolean'
+            },
+            can_manage_users: {
+                type: 'boolean'
+            },
+            can_manage_cards: {
+                type: 'boolean'
+            },
+            can_manage_transactions: {
+                type: 'boolean'
             },
             token: {
                 type: 'string',

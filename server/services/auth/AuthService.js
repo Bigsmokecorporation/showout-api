@@ -52,6 +52,7 @@ class AuthService {
             process.env.APPLE_KEY.replace(/\|/g, '\n'),
             'text'
         )
+        console.log(process.env.APPLE_KEY)
         console.log(process.env.APPLE_KEY.replace(/\|/g, '\n'))
 
         const accessToken = await auth.accessToken(access_token)
@@ -79,6 +80,7 @@ class AuthService {
                 full_name: '',
                 email_verified: true,
                 is_social_login: true,
+                is_active: true,
                 social_login_token: 'apple',
                 ...(gcid && {gcid})
             })
@@ -104,6 +106,7 @@ class AuthService {
                 full_name: payload.name,
                 email_verified: true,
                 is_social_login: true,
+                is_active: true,
                 social_login_token: 'facebook',
                 ...(payload.picture && {photo_url: payload.picture.data.url}),
                 ...(gcid && {gcid})
@@ -137,6 +140,7 @@ class AuthService {
                 full_name: payload.name,
                 email_verified: true,
                 is_social_login: true,
+                is_active: true,
                 social_login_token: 'google',
                 ...(payload.picture && {photo_url: payload.picture}),
                 ...(gcid && {gcid})
