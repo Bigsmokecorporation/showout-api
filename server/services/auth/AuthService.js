@@ -1,13 +1,13 @@
 import {OAuth2Client} from 'google-auth-library'
-import AppleAuth from "apple-auth";
+import AppleAuth from "apple-auth"
 import UserModel from "../../models/user.model.js"
 import bCrypt from 'bcryptjs'
-import HttpStatus from "../../util/HttpStatus.js";
-import ResponseCodes from "../../util/ResponseCodes.js";
-import UtilFunctions from "../../util/UtilFunctions.js";
-import EmailModel from "../../models/email.model.js";
-import Requests from "../../util/Requests.js";
-import jwt from "jsonwebtoken";
+import HttpStatus from "../../util/HttpStatus.js"
+import ResponseCodes from "../../util/ResponseCodes.js"
+import UtilFunctions from "../../util/UtilFunctions.js"
+import EmailModel from "../../models/email.model.js"
+import Requests from "../../util/Requests.js"
+import jwt from "jsonwebtoken"
 
 /**
  * Class represents user authentication services.
@@ -43,60 +43,48 @@ class AuthService {
 
         const auth = new AppleAuth(
             {
-                client_id: 'com.showout.web',
+                client_id: process.env.APPLE_BUNDLE_ID,
                 team_id: process.env.APPLE_TEAM_ID,
                 key_id: process.env.APPLE_KEY_ID,
                 scope: "name email",
-                redirect_uri: "https://apidev.showout.studio/auth/apple"
+                redirect_uri: "https://apidev.showout.studio/auth/callbacks/apple"
             },
             process.env.APPLE_KEY.replace(/\|/g, '\n'),
             'text'
-        );
-        console.log(process.env.APPLE_KEY.replace(/\|/g, '\n'));
+        )
+        console.log(process.env.APPLE_KEY.replace(/\|/g, '\n'))
 
-        const accessToken = await auth.accessToken(access_token);
+        const accessToken = await auth.accessToken(access_token)
 
         console.log('ACC_TOKEN', accessToken)
-        const id_token = jwt.decode(accessToken.id_token);
+        const id_token = jwt.decode(accessToken.id_token)
         console.log('ID_TOKEN', id_token)
 
         // console.log("access", accessToken)
         console.log("id_token", id_token)
 
         // `email` and `person's names` will come with call
-        // const email = id_token.email;
-        //
-        // const name = `${firstName} ${lastName}`;
-        //
-        // const obj = {
-        //     name,
-        //     email,
-        //     deviceRegistrationToken,
-        //     userRole,
-        //     provider: 'apple',
-        // };
+        const email = id_token.email
 
-
-        //     let user = await UserModel.get(email)
-        // if (user) {
-        //     user.new_social_login = false
-        //     if (gcid) await UserModel.update(email, {gcid})
-        //     await UtilFunctions.tokenizeUser(user)
-        //     return user
-        // } else {
-        //     let created_user = await UserModel.create({
-        //         id: UtilFunctions.genId(),
-        //         email,
-        //         full_name,
-        //         email_verified: true,
-        //         is_social_login: true,
-        //         social_login_token: 'apple',
-        //         ...(gcid && {gcid})
-        //     })
-        //     created_user.new_social_login = true
-        //     return created_user
-        // }
-
+        let user = await UserModel.get(email)
+        if (user) {
+            user.new_social_login = false
+            if (gcid) await UserModel.update(email, {gcid})
+            await UtilFunctions.tokenizeUser(user)
+            return user
+        } else {
+            let created_user = await UserModel.create({
+                id: UtilFunctions.genId(),
+                email,
+                full_name: '',
+                email_verified: true,
+                is_social_login: true,
+                social_login_token: 'apple',
+                ...(gcid && {gcid})
+            })
+            created_user.new_social_login = true
+                return created_user
+        }
     }
 
     static async loginWithFaceBook(rq, rs) {
@@ -177,7 +165,7 @@ class AuthService {
     }
 
     static async refreshToken(rq, rs) {
-        const {id, refresh_token} = rq.body;
+        const {id, refresh_token} = rq.body
         const user = await UserModel.get(id)
         if (user.refresh_token === refresh_token) {
             await UtilFunctions.tokenizeUser(user)
@@ -195,7 +183,7 @@ class AuthService {
         await EmailModel.sendMailUsingTemplate(process.env.PASS_RESET_TMP, user.id, {
             id: user.id,
             token: token
-        }, email);
+        }, email)
 
     }
 }
