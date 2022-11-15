@@ -74,9 +74,11 @@ app.use(httpContext.middleware);
 import docRoutes from './routes/docRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 
 app.use('/docs', docRoutes);
 app.use('/auth', authRoutes);
+app.use('/admin', adminRoutes);
 app.use('/user', userRoutes);
 
 export default app;
