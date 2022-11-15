@@ -26,5 +26,19 @@ class AdminController {
         }
     }
 
+    static async refreshToken(rq, rs) {
+        const {refresh_token} = rq.body
+        if (!refresh_token)
+            UtilFunctions.outputError(rs, "Please specify refresh token")
+
+        try {
+            const data = await AdminService.refreshToken(rq)
+            UtilFunctions.outputSuccess(rs, data)
+        } catch (error) {
+            WRITE.error(`Refreshing token failed. Error stack: ${error.stack}`)
+            UtilFunctions.outputError(rs, error.message, {}, error.responseCode)
+        }
+    }
+
 }
 export default AdminController;

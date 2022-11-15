@@ -1,9 +1,7 @@
 import UtilFunctions from "../../util/UtilFunctions.js";
 import AdminModel from "../../models/admin.model.js";
 import bCrypt from "bcryptjs";
-import UserModel from "../../models/user.model.js";
 import ResponseCodes from "../../util/ResponseCodes.js";
-import HttpStatus from "../../util/HttpStatus.js";
 
 /**
  * Class represents services.
@@ -30,6 +28,17 @@ class AdminService {
             rs.locals.admin = admin
             return admin
         }
+    }
+
+    static async refreshToken(rq) {
+        const {id, refresh_token} = rq.body
+        const admin = await AdminModel.get(id)
+        if (admin.refresh_token === refresh_token) {
+            await UtilFunctions.tokenizeUser(admin)
+            await AdminModel.update(admin.id, {refresh_token: admin.refresh_token})
+            return admin
+        } else
+            throw new ShowOutError('Failed to validate refresh token', {}, ResponseCodes.INVALID_REFRESH_TOKEN)
     }
 }
 
