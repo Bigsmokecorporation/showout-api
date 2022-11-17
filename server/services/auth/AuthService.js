@@ -25,8 +25,8 @@ class AuthService {
             const hasPendingVerification = await UserModel.hasPendingVerification(user.id)
             if (!user.email_verified || hasPendingVerification) {
                 // resend mail
-                // const pendingVerification = await UserModel.pendingVerification(current_user.id)
-                // await EmailModel.sendVerificationMail(user.id, current_user.full_name, pendingVerification[0].token)
+                const pendingVerification = await UserModel.pendingVerification(user.id)
+                await EmailModel.sendVerificationMail(user.id, pendingVerification[0].token)
                 throw new ShowOutError("Please check your mail for a verification code", user, ResponseCodes.VERIFICATION_PENDING, HttpStatus.FOUND)
             } else {
                 delete user.password
@@ -38,7 +38,7 @@ class AuthService {
         }
     }
 
-    static async loginWithApple(rq, rs) {
+    static async loginWithApple(rq) {
         const {access_token, gcid} = rq.body
 
         const auth = new AppleAuth(
@@ -52,7 +52,7 @@ class AuthService {
             process.env.APPLE_KEY.replaceAll('|', '\n'),
             'text'
         )
-        console.log(process.env.APPLE_KEY.replace(/\|/g, '\n'))
+
         console.log(process.env.APPLE_KEY.replaceAll('|', '\n'))
 
         const accessToken = await auth.accessToken(access_token)
@@ -89,7 +89,7 @@ class AuthService {
         }
     }
 
-    static async loginWithFaceBook(rq, rs) {
+    static async loginWithFaceBook(rq) {
         const {user_id, access_token, gcid} = rq.body
         const url = `https://graph.facebook.com/v9.0/${user_id}/?fields=id,name,email,picture&access_token=${access_token}`
         const payload = await Requests.get(url)
@@ -116,7 +116,7 @@ class AuthService {
         }
     }
 
-    static async loginWithGoogle(rq, rs) {
+    static async loginWithGoogle(rq) {
         const client = new OAuth2Client(process.env.GOOGLE_CLIENT)
         const {access_token, gcid} = rq.body
         const ticket = await client.verifyIdToken({
@@ -168,7 +168,7 @@ class AuthService {
             throw new ShowOutError(`There's no pending verification for this user`)
     }
 
-    static async refreshToken(rq, rs) {
+    static async refreshToken(rq) {
         const {id, refresh_token} = rq.body
         const user = await UserModel.get(id)
         if (user.refresh_token === refresh_token) {
@@ -179,7 +179,7 @@ class AuthService {
             throw new ShowOutError('Failed to validate refresh token', {}, ResponseCodes.INVALID_REFRESH_TOKEN)
     }
 
-    static async forgotPassword(rq, rs) {
+    static async forgotPassword(rq) {
         const {email} = rq.body
         const user = await UserModel.get(email)
         let token = UtilFunctions.genId(30)

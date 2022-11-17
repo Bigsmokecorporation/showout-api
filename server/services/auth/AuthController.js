@@ -1,6 +1,5 @@
 import AuthService from './AuthService.js'
 import UtilFunctions from "../../util/UtilFunctions.js"
-import EmailModel from "../../models/email.model.js";
 
 /**
  * Class represents user authentication.
@@ -27,7 +26,7 @@ class AuthController {
             return UtilFunctions.outputError(rs, "Please specify access_token")
 
         try {
-            const data = await AuthService.loginWithApple(rq, rs)
+            const data = await AuthService.loginWithApple(rq)
             UtilFunctions.outputSuccess(rs, data)
         } catch (error) {
             WRITE.error(`Apple login failed. Error stack: ${error.stack}`)
@@ -40,7 +39,7 @@ class AuthController {
             UtilFunctions.outputError(rs, "Please specify token")
 
         try {
-            const data = await AuthService.loginWithFaceBook(rq, rs)
+            const data = await AuthService.loginWithFaceBook(rq)
             UtilFunctions.outputSuccess(rs, data)
         } catch (error) {
             WRITE.error(`FaceBook login failed. Error stack: ${error.stack}`)
@@ -53,7 +52,7 @@ class AuthController {
             UtilFunctions.outputError(rs, "Please specify token")
 
         try {
-            const data = await AuthService.loginWithGoogle(rq, rs)
+            const data = await AuthService.loginWithGoogle(rq)
             UtilFunctions.outputSuccess(rs, data)
         } catch (error) {
             WRITE.error(`Google login failed. Error stack: ${error.stack}`)
@@ -81,7 +80,7 @@ class AuthController {
             UtilFunctions.outputError(rs, "Please specify refresh token")
 
         try {
-            const data = await AuthService.refreshToken(rq, rs)
+            const data = await AuthService.refreshToken(rq)
             UtilFunctions.outputSuccess(rs, data)
         } catch (error) {
             WRITE.error(`Refreshing token failed. Error stack: ${error.stack}`)
@@ -94,7 +93,7 @@ class AuthController {
         if (!email)
             UtilFunctions.outputError(rs, "Email is required");
         try {
-            const data = await AuthService.forgotPassword(rq, rs)
+            const data = await AuthService.forgotPassword(rq)
             UtilFunctions.outputSuccess(rs, data, 'Check email for a password reset link')
         } catch (error) {
             WRITE.error(`Password rest failed. Error stack: ${error.stack}`)

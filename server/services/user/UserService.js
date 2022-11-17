@@ -22,13 +22,13 @@ class UserService {
             if (created_user) {
 
                 //generate mail token
-                const email_token = 1234  //UtilFunctions.genOTP(4)
+                const email_token = UtilFunctions.genOTP(4)
                 console.log(`Token generated: ${email_token}`)
 
                 await self.createVerification(created_user.id, email_token)
 
                 //send verification mail
-                // await EmailModel.sendVerificationMail(created_user.id, created_user.full_name, email_token)
+                await EmailModel.sendVerificationMail(created_user.id, email_token)
                 return created_user
             } else {
                 UtilFunctions.outputError(rs, 'An error occurred', {}, HttpStatus.INTERNAL_SERVER_ERROR)
