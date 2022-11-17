@@ -1,4 +1,53 @@
 export default (swagger) => {
+    swagger.paths['/admin/create'] = {
+        'post': {
+            'tags': [
+                'Admin'
+            ],
+            description: 'Creates An Admin Account',
+            requestBody: {
+                content: {
+                    'application/json': {
+                        schema: {
+                            type: 'object',
+                            properties: {
+                                full_name: {
+                                    type: 'string'
+                                },
+                                email: {
+                                    type: 'string'
+                                },
+                                role_id: {
+                                    type: 'string',
+                                    example: '234rtfg543234'
+                                },
+                                password: {
+                                    type: 'string',
+                                    example: 123456
+                                },
+                                mobile_number: {
+                                    type: 'string',
+                                    example: '+12345'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            responses: {
+                200: {
+                    description: 'Creates new admin.',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                $ref: '#/components/schemas/AdminResponse'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     swagger.paths['/admin/login'] = {
         post: {
             tags: [
@@ -78,6 +127,40 @@ export default (swagger) => {
             }
         }
     }
+    swagger.paths['/admin/get-users'] = {
+        get: {
+            tags: [
+                'Admin'
+            ],
+            description: 'Retrieves users',
+            parameters: [],
+            responses: {
+                200: {
+                    description: 'Successful retrieval.',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    status: {
+                                        type: 'string',
+                                        example: 'SUCCESS'
+                                    },
+                                    data: {
+                                        type: 'array',
+                                        items: {
+                                            $ref: '#/components/schemas/UserMinimal'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
     swagger.components.schemas['Admin'] = {
         type: 'object',

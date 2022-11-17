@@ -32,10 +32,23 @@ class UserModel {
         }
         return user[0]
     }
-    static async getMultiple() {
-        return DB.select('id', 'full_name', 'email', 'user_type')
+    static async getMultiple(query) {
+        const default_query = DB.select('*')
             .from('users')
-            .where({is_active: true})
+        if (query)
+            default_query.where(query)
+
+        const users = await default_query
+        for (const user of users) {
+            if (user.photo_url && !user.is_social_login)
+                user.photo_url = await UploadService.getSignedUrl(`photos/${user.id}`)
+            delete user.password
+            delete user.pass_code
+            delete user.gcid
+            delete user.refresh_token
+        }
+
+        return users
     }
 
     static async update(parameter, data, returning = '*') {

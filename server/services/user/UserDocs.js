@@ -257,6 +257,96 @@ export default (swagger) => {
         }
     }
 
+    swagger.components.schemas['UserMinimal'] = {
+        type: 'object',
+        properties: {
+            id: {
+                type: 'string',
+                example: '62beeda345678ygfgryt'
+            },
+            full_name: {
+                type: 'string'
+            },
+            email: {
+                type: 'string'
+            },
+            mobile_number: {
+                type: 'string',
+                example: 233249713683
+            },
+            gender: {
+                type: 'string',
+                enum: [
+                    'M',
+                    'F'
+                ]
+            },
+            user_type: {
+                type: 'string',
+                enum: [
+                    'corporate', 'individual'
+                ]
+            },
+            tag_name: {
+                type: 'string',
+                example: 'theKing'
+            },
+            strap_line: {
+                type: 'string',
+                example: 'Cool headed nig'
+            },
+            city: {
+                type: 'string',
+                example: 'Accra'
+            },
+            country: {
+                type: 'string',
+                example: 'Ghana'
+            },
+            stage_name: {
+                type: 'string',
+                example: 'Smooth'
+            },
+            photo_url: {
+                type: 'string',
+                example: 'https://ccc'
+            },
+            is_social_login: {
+                type: 'boolean',
+                example: false
+            },
+            new_social_login: {
+                type: 'boolean',
+                example: false
+            },
+            social_login_token: {
+                type: 'string',
+                example: 'google'
+            },
+            bio: {
+                type: 'string',
+                example: 'More stuff here'
+            },
+            is_active: {
+                type: 'boolean',
+                example: true
+            },
+            email_verified: {
+                type: 'boolean',
+                example: true
+            },
+            biometric_enabled: {
+                type: 'boolean',
+                example: true
+            },
+            dob: {
+                type: 'string',
+                format: '$date',
+                example: '2000-02-16T00:00:00.000Z'
+            }
+        }
+    }
+
     swagger.components.schemas['UserResponse'] = {
         type: 'object',
         properties: {

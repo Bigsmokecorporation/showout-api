@@ -40,5 +40,32 @@ class AdminController {
         }
     }
 
+    static async getUsers (rq, rs) {
+        try {
+            const data = await AdminService.getUsers(rq)
+            UtilFunctions.outputSuccess(rs, data)
+        } catch (error) {
+            WRITE.error(`Fetching users failed. Error stack: ${error.stack}`)
+            UtilFunctions.outputError(rs, error.message, {}, error.responseCode)
+        }
+    }
+
+
+    //  ADMINS
+
+    static async create(rq, rs) {
+        const {full_name, email, role_id, password} = rq.body;
+        if (!(email && full_name && role_id && password))
+            UtilFunctions.outputError(rs, "All items are required");
+
+        try {
+            const data = await AdminService.create(rq.body, rs);
+            UtilFunctions.outputSuccess(rs, data)
+        } catch (error) {
+            WRITE.error(`Failed to create admin. Error stack: ${error.stack}`);
+            UtilFunctions.outputError(rs, error.message, {}, error.responseCode);
+        }
+    }
+
 }
 export default AdminController;

@@ -34,7 +34,6 @@ class UserService {
                 UtilFunctions.outputError(rs, 'An error occurred', {}, HttpStatus.INTERNAL_SERVER_ERROR)
             }
         }
-
     }
 
     static async update(req, rs, user) {

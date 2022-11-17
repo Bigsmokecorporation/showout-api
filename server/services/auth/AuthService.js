@@ -19,8 +19,12 @@ class AuthService {
     static async login(rq, rs) {
         const {email, password} = rq.body
         const user = await UserModel.get(email, true)
-        if (!user || !(await bCrypt.compare(password, user.password)))
+
+        if (!user
+            || (user && user.is_social_login)
+            || !(await bCrypt.compare(password, user.password)))
             throw new ShowOutError('Please check and re-enter details correctly')
+
         else {
             const hasPendingVerification = await UserModel.hasPendingVerification(user.id)
             if (!user.email_verified || hasPendingVerification) {
@@ -85,7 +89,7 @@ class AuthService {
                 ...(gcid && {gcid})
             })
             created_user.new_social_login = true
-                return created_user
+            return created_user
         }
     }
 
