@@ -204,6 +204,41 @@ export default (swagger) => {
             }
         }
     }
+    swagger.paths['/auth/resend-verification-code'] = {
+        post: {
+            tags: [
+                'Auth'
+            ],
+            description: 'Verifies email token',
+            requestBody: {
+                content: {
+                    'application/json': {
+                        schema: {
+                            type: 'object',
+                            properties: {
+                                email: {
+                                    type: 'string',
+                                    example: 'bstoney7@gmail.com'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            responses: {
+                200: {
+                    description: 'Successful verification.',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                $ref: '#/components/schemas/Success'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     swagger.paths['/auth/refresh-token'] = {
         post: {
             tags: [
@@ -237,6 +272,45 @@ export default (swagger) => {
                         'application/json': {
                             schema: {
                                 $ref: '#/components/schemas/UserResponse'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    swagger.paths['/auth/forgot-password'] = {
+        post: {
+            tags: [
+                'Auth'
+            ],
+            description: 'Begins a password reset flow',
+            requestBody: {
+                content: {
+                    'application/json': {
+                        schema: {
+                            type: 'object',
+                            properties: {
+                                id: {
+                                    type: 'string',
+                                    example: 'fc4y04sK9OiFjcbFZKB1'
+                                },
+                                email: {
+                                    type: 'string',
+                                    example: 'bstoney7@gmail.com'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            responses: {
+                200: {
+                    description: 'Reset link sent.',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                $ref: '#/components/schemas/Success'
                             }
                         }
                     }

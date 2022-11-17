@@ -96,7 +96,20 @@ class AuthController {
             const data = await AuthService.forgotPassword(rq)
             UtilFunctions.outputSuccess(rs, data, 'Check email for a password reset link')
         } catch (error) {
-            WRITE.error(`Password rest failed. Error stack: ${error.stack}`)
+            WRITE.error(`Password reset failed. Error stack: ${error.stack}`)
+            UtilFunctions.outputError(rs, error.message, {}, error.responseCode)
+        }
+    }
+
+    static async resendCode(rq, rs) {
+        const {email} = rq.body
+        if (!email)
+            UtilFunctions.outputError(rs, "Email is required");
+        try {
+            const data = await AuthService.resendCode(rq)
+            UtilFunctions.outputSuccess(rs, data, 'Check email for verification code')
+        } catch (error) {
+            WRITE.error(`Failed to resend code. Error stack: ${error.stack}`)
             UtilFunctions.outputError(rs, error.message, {}, error.responseCode)
         }
     }

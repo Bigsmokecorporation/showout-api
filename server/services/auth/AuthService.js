@@ -186,14 +186,36 @@ class AuthService {
     static async forgotPassword(rq) {
         const {email} = rq.body
         const user = await UserModel.get(email)
+        if (!user)
+            throw new ShowOutError('Failed to identify user', {})
+
+        if (user.is_social_login)
+            throw new ShowOutError('This user has no password', {}, ResponseCodes.SOCIAL_LOGIN)
+
         let token = UtilFunctions.genId(30)
         await UserModel.createVerification(user.id, token)
         await EmailModel.sendMailUsingTemplate(process.env.PASS_RESET_TMP, user.id, {
+            full_name: user.full_name,
             id: user.id,
             token: token
         }, email)
 
     }
+
+    static async resendCode(rq) {
+        const {email} = rq.body
+        const user = await UserModel.get(email, true)
+        if (!user)
+            throw new ShowOutError('No user found with that email')
+
+        const hasPendingVerification = await UserModel.hasPendingVerification(user.id)
+        if (!user.email_verified || hasPendingVerification) {
+            const pendingVerification = await UserModel.pendingVerification(user.id)
+            await EmailModel.sendVerificationMail(user.id, pendingVerification[0].token)
+        } else
+            throw new ShowOutError(`There's no pending verification for this user`)
+    }
+
 }
 
 export default AuthService
