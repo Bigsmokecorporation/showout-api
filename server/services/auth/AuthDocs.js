@@ -55,10 +55,7 @@ export default (swagger) => {
                         schema: {
                             type: 'object',
                             properties: {
-                                full_name: {
-                                    type: 'string'
-                                },
-                                email: {
+                                access_token: {
                                     type: 'string'
                                 },
                                 gcid: {

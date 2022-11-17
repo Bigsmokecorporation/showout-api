@@ -49,11 +49,11 @@ class AuthService {
                 scope: "name email",
                 redirect_uri: "https://apidev.showout.studio/auth/callbacks/apple"
             },
-            process.env.APPLE_KEY.replace(/\|/g, '\n'),
+            process.env.APPLE_KEY.replaceAll('|', '\n'),
             'text'
         )
-        console.log(process.env.APPLE_KEY)
         console.log(process.env.APPLE_KEY.replace(/\|/g, '\n'))
+        console.log(process.env.APPLE_KEY.replaceAll('|', '\n'))
 
         const accessToken = await auth.accessToken(access_token)
 
