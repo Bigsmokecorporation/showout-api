@@ -57,16 +57,8 @@ class AuthService {
             'text'
         )
 
-        console.log(process.env.APPLE_KEY.replaceAll('|', '\n'))
-
         const accessToken = await auth.accessToken(access_token)
-
-        console.log('ACC_TOKEN', accessToken)
         const id_token = jwt.decode(accessToken.id_token)
-        console.log('ID_TOKEN', id_token)
-
-        // console.log("access", accessToken)
-        console.log("id_token", id_token)
 
         // `email` and `person's names` will come with call
         const email = id_token.email

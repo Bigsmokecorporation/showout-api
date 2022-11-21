@@ -30,18 +30,17 @@ class UserService {
                 //send verification mail
                 await EmailModel.sendVerificationMail(created_user.id, email_token)
                 return created_user
-            } else {
+            } else
                 UtilFunctions.outputError(rs, 'An error occurred', {}, HttpStatus.INTERNAL_SERVER_ERROR)
-            }
         }
     }
 
-    static async update(req, rs, user) {
-        const data = req.body
-        if (!_.isEmpty(req.files)) {
-            if (_.has(req.files, 'photo')) {
+    static async update(rq, rs, user) {
+        const data = rq.body
+        if (!_.isEmpty(rq.files)) {
+            if (_.has(rq.files, 'photo')) {
                 const fileName = `photos/${user.id}`;
-                await UploadService.uploadFile(req.files.photo[0], fileName);
+                await UploadService.uploadFile(rq.files.photo[0], fileName);
                 data.photo_url = `${CONSTANTS.S3}${fileName}`;
             }
         }

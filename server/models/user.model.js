@@ -1,10 +1,10 @@
 import UtilFunctions from "../util/UtilFunctions.js"
-import bCrypt from 'bcryptjs';
-import UploadService from "../util/UploadService.js";
+import bCrypt from 'bcryptjs'
+import UploadService from "../util/UploadService.js"
 
 class UserModel {
     static async create(data) {
-        if (data.password) data.password = await bCrypt.hash(data.password, 10);
+        if (data.password) data.password = await bCrypt.hash(data.password, 10)
         let new_user = await DB('users')
             .returning('*')
             .insert(data)
@@ -62,9 +62,9 @@ class UserModel {
                 user[0].photo_url = await UploadService.getSignedUrl(`photos/${user[0].id}`)
             delete user[0].password
             delete user[0].pass_code
-            return user[0];
+            return user[0]
         }
-        return false;
+        return false
     }
 
 

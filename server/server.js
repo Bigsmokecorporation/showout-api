@@ -75,10 +75,12 @@ import docRoutes from './routes/docRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import cardRoutes from './routes/cardRoutes.js';
 
 app.use('/docs', docRoutes);
 app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
 app.use('/user', userRoutes);
+app.use('/card', cardRoutes);
 
 export default app;

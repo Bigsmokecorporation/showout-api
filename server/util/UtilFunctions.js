@@ -21,10 +21,10 @@ class Utils {
         });
     }
 
-    static _clearNulls(data) {
+    static _clearNulls(data, clearEmptyStrings = false) {
         let fileKeys = Array.isArray(data) ? data : Object.keys(data);
         fileKeys.forEach((key) => {
-            if (data[key] === null) {
+            if (data[key] === null || (clearEmptyStrings && data[key] === '')) {
                 delete data[key];
             } else {
                 if (typeof data[key] === 'object') {
