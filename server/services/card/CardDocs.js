@@ -61,6 +61,9 @@ export default (swagger) => {
                                 share_value: {
                                     type: 'numeric'
                                 },
+                                terms_accepted: {
+                                    type: 'boolean'
+                                },
                                 card_type: {
                                     type: 'string',
                                     enum: [

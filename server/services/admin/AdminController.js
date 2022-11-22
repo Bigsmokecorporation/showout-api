@@ -53,6 +53,13 @@ class AdminController {
 
     //  ADMINS
 
+
+    /**
+     * @desc This function creates an admin account
+     * @author Kwame Twum
+     * @param {Object} rq Request
+     * @param {Object} rs Response
+     */
     static async create(rq, rs) {
         const {full_name, email, role_id, password} = rq.body;
         if (!(email && full_name && role_id && password))
@@ -64,6 +71,41 @@ class AdminController {
         } catch (error) {
             WRITE.error(`Failed to create admin. Error stack: ${error.stack}`);
             UtilFunctions.outputError(rs, error.message, {}, error.responseCode);
+        }
+    }
+
+    /**
+     * @desc This function updates an admin user account
+     * @author Kwame Twum
+     * @param {Object} rq Request
+     * @param {Object} rs Response
+     */
+    static async update(rq, rs) {
+        try {
+            const data = await AdminService.update(rq);
+            UtilFunctions.outputSuccess(rs, data)
+        } catch (error) {
+            WRITE.error(`Failed to update admin user. Error stack: ${error.stack}`);
+            UtilFunctions.outputError(rs, error.message);
+        }
+    }
+    static async get(rq, rs) {
+        try {
+            const data = await AdminService.getAdmin(rq);
+            UtilFunctions.outputSuccess(rs, data)
+        } catch (error) {
+            WRITE.error(`Failed to retrieve admin user. Error stack: ${error.stack}`);
+            UtilFunctions.outputError(rs, error.message);
+        }
+    }
+
+    static async getAdmins (rq, rs) {
+        try {
+            const data = await AdminService.getAdmins(rq)
+            UtilFunctions.outputSuccess(rs, data)
+        } catch (error) {
+            WRITE.error(`Fetching admin users failed. Error stack: ${error.stack}`)
+            UtilFunctions.outputError(rs, error.message, {}, error.responseCode)
         }
     }
 

@@ -71,6 +71,30 @@ class AdminService {
         }
 
     }
+
+    static async getAdmin(rq) {
+        const user = await AdminModel.get(rq.query)
+        if (user)
+            return user
+        else
+            throw new ShowOutError('Failed to retrieve admin user', [], ResponseCodes.FAILED)
+    }
+
+    static async getAdmins(rq) {
+        const users = await AdminModel.getMultiple(rq.query)
+        if (users)
+            return users
+        else
+            throw new ShowOutError('Failed to retrieve admin users', [], ResponseCodes.FAILED)
+    }
+
+    static async update(rq) {
+        const data = rq.body
+        const updated_admin = await AdminModel.update(rq.params.id, data)
+        if (updated_admin)
+            return updated_admin;
+        throw new ShowOutError('Update failed')
+    }
 }
 
 export default AdminService;

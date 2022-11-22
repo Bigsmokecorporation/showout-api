@@ -48,6 +48,64 @@ export default (swagger) => {
             }
         }
     }
+    swagger.paths['/admin/update/{id}'] = {
+        'put': {
+            'tags': [
+                'Admin'
+            ],
+            description: 'Updates An Admin Account',
+            parameters: [
+                {
+                    in: 'path',
+                    name: 'id',
+                    description: 'Admin id',
+                    required: true,
+                    example: '5f631e56d37c01f0fa45'
+                }
+            ],
+            requestBody: {
+                content: {
+                    'application/json': {
+                        schema: {
+                            type: 'object',
+                            properties: {
+                                full_name: {
+                                    type: 'string'
+                                },
+                                email: {
+                                    type: 'string'
+                                },
+                                role_id: {
+                                    type: 'string',
+                                    example: '234rtfg543234'
+                                },
+                                password: {
+                                    type: 'string',
+                                    example: 123456
+                                },
+                                mobile_number: {
+                                    type: 'string',
+                                    example: '+12345'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            responses: {
+                200: {
+                    description: 'Updates an admin.',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                $ref: '#/components/schemas/AdminResponse'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     swagger.paths['/admin/login'] = {
         post: {
             tags: [
@@ -150,6 +208,80 @@ export default (swagger) => {
                                         type: 'array',
                                         items: {
                                             $ref: '#/components/schemas/UserMinimal'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    swagger.paths['/admin/get-admins'] = {
+        get: {
+            tags: [
+                'Admin'
+            ],
+            description: 'Retrieves admin users',
+            parameters: [],
+            responses: {
+                200: {
+                    description: 'Successful retrieval.',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    status: {
+                                        type: 'string',
+                                        example: 'SUCCESS'
+                                    },
+                                    data: {
+                                        type: 'array',
+                                        items: {
+                                            $ref: '#/components/schemas/Admin'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    swagger.paths['/admin/{id}'] = {
+        get: {
+            tags: [
+                'Admin'
+            ],
+            description: 'Retrieves an admin user',
+            parameters: [
+                {
+                    in: 'path',
+                    name: 'id',
+                    description: 'Admin id',
+                    required: true,
+                    example: '5f631e56d37c01f0fa45'
+                }
+            ],
+            responses: {
+                200: {
+                    description: 'Successful retrieval.',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    status: {
+                                        type: 'string',
+                                        example: 'SUCCESS'
+                                    },
+                                    data: {
+                                        type: 'array',
+                                        items: {
+                                            $ref: '#/components/schemas/AdminResponse'
                                         }
                                     }
                                 }

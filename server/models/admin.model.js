@@ -19,27 +19,38 @@ class AdminModel {
     }
 
     static async get(parameter, retainPassword = false) {
-        let admin = await DB.select('*')
+        let admin = await DB.select('admins.*')
             .from('admins')
-            .leftJoin('roles', 'admins.role_id', 'roles.id')
-            // .where({id: parameter})
-            .where({email: parameter})
+            .where({id: parameter})
+            .orWhere({email: parameter})
         if (admin.length) {
             if (!retainPassword) delete admin[0].password
         }
         return admin[0]
     }
     
-    static async getMultiple() {
-        return DB.select('id', 'full_name', 'email', 'role_id', 'admin_type')
-            .from('admins')
-            .where({is_active: true})
+    static async getMultiple(query) {
+        const admins = await DB.select('*')
+            .fromRaw('(select admins.*, role_name, can_manage_admins,can_manage_users,can_manage_cards,can_manage_transactions from admins inner join roles r on r.id = admins.role_id) ab')
+            // .raw(`select admins.*, role_name from admins inner join roles r on r.id = admins.role_id`)
+            // .select('admins.*, roles.*')
+            // .from('admins')
+            // .leftJoin('roles', 'admins.role_id', 'roles.id')
+        // if (query)
+        //     default_query.where(query)
+
+        // const admins = await default_query
+        for (const admin of admins) {
+            delete admin.password
+            delete admin.refresh_token
+        }
+
+        return admins
     }
 
-    static async update(parameter, data, returning = '*') {
+    static async update(id, data, returning = '*') {
         const admin = await DB('admins')
-            .where({id: parameter})
-            .orWhere({email: parameter})
+            .where({id})
             .returning(returning)
             .update(data)
         if (admin.length) {
