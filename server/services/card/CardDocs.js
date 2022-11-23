@@ -72,19 +72,9 @@ export default (swagger) => {
                                     ],
                                     default: 'music'
                                 },
-                                card_genre: {
+                                card_genre_id: {
                                     type: 'string',
-                                    enum: [
-                                        'pop',
-                                        'country',
-                                        'hiphop',
-                                        'rnb',
-                                        'jazz',
-                                        'reggae',
-                                        'hiphop',
-                                        'rock',
-                                        'metal',
-                                    ]
+                                    example: 'jghfdew43567890'
                                 },
                             }
                         }
@@ -160,19 +150,9 @@ export default (swagger) => {
                 ],
                 default: 'music'
             },
-            card_genre: {
+            card_genre_id: {
                 type: 'string',
-                enum: [
-                    'pop',
-                    'country',
-                    'hiphop',
-                    'rnb',
-                    'jazz',
-                    'reggae',
-                    'hiphop',
-                    'rock',
-                    'metal',
-                ]
+                example: 'jghfdew43567890'
             },
             hotometer_value: {
                 type: 'string'
