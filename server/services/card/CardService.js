@@ -59,6 +59,46 @@ class CardService {
         }
 
     }
+
+    static async update(rq, data) {
+        const id = rq.params.id
+        if (!_.isEmpty(rq.files)) {
+            if (_.has(rq.files, 'media')) {
+                const fileName = `media/raw/${id}`;
+                await UploadService.uploadFile(rq.files.media[0], fileName);
+                data.media_url = `${CONSTANTS.S3}${fileName}`;
+            }
+            if (_.has(rq.files, 'cover_art')) {
+                const fileName = `media/cover/${id}`;
+                await UploadService.uploadFile(rq.files.cover_art[0], fileName);
+                data.cover_art_url = `${CONSTANTS.S3}${fileName}`;
+            }
+            if (_.has(rq.files, 'media_demo')) {
+                const fileName = `media/crop/${id}`;
+                await UploadService.uploadFile(rq.files.media_demo[0], fileName);
+                data.media_demo_url = `${CONSTANTS.S3}${fileName}`;
+            }
+        }
+
+        const updated_card = await CardModel.update(id, data)
+        if (updated_card)
+            return updated_card;
+        throw new ShowOutError('Update failed')
+    }
+
+    static async get(id) {
+        return CardModel.get(id, false)
+    }
+
+    static async list(rq) {
+        return CardModel.getMultiple(rq.query)
+    }
+
+    static async genres() {
+        let genres = await DB.select('*')
+            .from('genres')
+        return genres ?? []
+    }
 }
 
 export default CardService;

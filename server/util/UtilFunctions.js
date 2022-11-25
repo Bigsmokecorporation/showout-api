@@ -22,7 +22,13 @@ class Utils {
     }
 
     static _clearNulls(data, clearEmptyStrings = false) {
-        let fileKeys = Array.isArray(data) ? data : Object.keys(data);
+        let fileKeys
+        if (_.isArray(data)) {
+            data.forEach(d => this._clearNulls(d))
+            return data
+        } else {
+            fileKeys = Object.keys(data)
+        }
         fileKeys.forEach((key) => {
             if (data[key] === null || (clearEmptyStrings && data[key] === '')) {
                 delete data[key];
@@ -32,7 +38,7 @@ class Utils {
                 }
             }
         });
-        return data;
+        return data
     }
 
     static now(daysToAdd = 0) {
