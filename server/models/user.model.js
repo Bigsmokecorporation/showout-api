@@ -58,7 +58,7 @@ class UserModel {
             .returning(returning)
             .update(data)
         if (user.length) {
-            if (user[0].photo_url && !user[0].is_social_login)
+            if (user[0].photo_url)
                 user[0].photo_url = await UploadService.getSignedUrl(`photos/${user[0].id}`)
             delete user[0].password
             delete user[0].pass_code
