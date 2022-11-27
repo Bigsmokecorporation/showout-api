@@ -16,7 +16,7 @@ class AdminController {
     static async login (rq, rs) {
         const {email, password} = rq.body
         if (!(email && password))
-            UtilFunctions.outputError(rs, "Please specify both email and password details")
+            return UtilFunctions.outputError(rs, "Please specify both email and password details")
         try {
             const data = await AdminService.login(rq, rs)
             UtilFunctions.outputSuccess(rs, data)
@@ -29,7 +29,7 @@ class AdminController {
     static async refreshToken(rq, rs) {
         const {refresh_token} = rq.body
         if (!refresh_token)
-            UtilFunctions.outputError(rs, "Please specify refresh token")
+            return UtilFunctions.outputError(rs, "Please specify refresh token")
 
         try {
             const data = await AdminService.refreshToken(rq)
@@ -63,7 +63,7 @@ class AdminController {
     static async create(rq, rs) {
         const {full_name, email, role_id, password} = rq.body;
         if (!(email && full_name && role_id && password))
-            UtilFunctions.outputError(rs, "All items are required");
+            return UtilFunctions.outputError(rs, "All items are required");
 
         try {
             const data = await AdminService.create(rq.body, rs);

@@ -36,7 +36,7 @@ class AuthController {
 
     static async faceBookLogin(rq, rs) {
         if (!(rq.body.user_id && rq.body.access_token))
-            UtilFunctions.outputError(rs, "Please specify token")
+            return UtilFunctions.outputError(rs, "Please specify token")
 
         try {
             const data = await AuthService.loginWithFaceBook(rq)
@@ -49,7 +49,7 @@ class AuthController {
 
     static async googleLogin(rq, rs) {
         if (!rq.body.access_token)
-            UtilFunctions.outputError(rs, "Please specify token")
+            return UtilFunctions.outputError(rs, "Please specify token")
 
         try {
             const data = await AuthService.loginWithGoogle(rq)
@@ -63,7 +63,7 @@ class AuthController {
     static async verify(rq, rs) {
         const {id, token} = rq.body
         if (!(id && token))
-            UtilFunctions.outputError(rs, "Please specify both token and id")
+            return UtilFunctions.outputError(rs, "Please specify both token and id")
 
         try {
             const data = await AuthService.verify(rq, rs)
@@ -77,7 +77,7 @@ class AuthController {
     static async refreshToken(rq, rs) {
         const {refresh_token} = rq.body
         if (!refresh_token)
-            UtilFunctions.outputError(rs, "Please specify refresh token")
+            return UtilFunctions.outputError(rs, "Please specify refresh token")
 
         try {
             const data = await AuthService.refreshToken(rq)
@@ -91,7 +91,7 @@ class AuthController {
     static async forgotPassword(rq, rs) {
         const {email} = rq.body
         if (!email)
-            UtilFunctions.outputError(rs, "Email is required");
+            return UtilFunctions.outputError(rs, "Email is required");
         try {
             const data = await AuthService.forgotPassword(rq)
             UtilFunctions.outputSuccess(rs, data, 'Check email for a password reset link')
@@ -104,7 +104,7 @@ class AuthController {
     static async resendCode(rq, rs) {
         const {email} = rq.body
         if (!email)
-            UtilFunctions.outputError(rs, "Email is required");
+            return UtilFunctions.outputError(rs, "Email is required");
         try {
             const data = await AuthService.resendCode(rq)
             UtilFunctions.outputSuccess(rs, data, 'Check email for verification code')

@@ -33,7 +33,7 @@ class UserController {
     static async create(rq, rs) {
         const {full_name, email, stage_name, password} = rq.body;
         if (!(email && full_name && stage_name && password))
-            UtilFunctions.outputError(rs, "All items are required");
+            return UtilFunctions.outputError(rs, "All items are required");
 
         try {
             const data = await UserService.create(rq.body, rs);

@@ -52,7 +52,7 @@ class CardService {
             if (created_card)
                 return created_card
             else
-                UtilFunctions.outputError(rs, 'An error occurred', {}, HttpStatus.INTERNAL_SERVER_ERROR)
+                return UtilFunctions.outputError(rs, 'An error occurred', {}, HttpStatus.INTERNAL_SERVER_ERROR)
 
         } else {
             throw new ShowOutError('No files found. Please select media files', {}, responseCodes.NO_FILES_FOUND, httpStatus.BAD_REQUEST)
