@@ -60,6 +60,37 @@ class CardService {
 
     }
 
+    static async createWithUintFiles(rq, rs, user) {
+        const id = UtilFunctions.genId()
+        const data = {id, ...rq.body, ...{owner_id: user.id}}
+
+
+        if (data.media) {
+            const fileName = `media/raw/${id}`;
+            await UploadService.uploadFileBytes(data.media.bytes, fileName, 'audio/mp3');
+            data.media_url = `${CONSTANTS.S3}${fileName}`;
+
+            UtilFunctions._clearNulls(data, true)
+
+            //Parse json fields
+            if (data.media_meta)
+                data.media_meta = JSON.parse(data.media_meta)
+            if (data.style)
+                data.style = JSON.parse(data.style)
+
+            let created_card = await CardModel.create(data)
+
+            if (created_card)
+                return created_card
+            else
+                return UtilFunctions.outputError(rs, 'An error occurred', {}, HttpStatus.INTERNAL_SERVER_ERROR)
+
+        } else {
+            throw new ShowOutError('No files found. Please select media files', {}, responseCodes.NO_FILES_FOUND, httpStatus.BAD_REQUEST)
+        }
+
+    }
+
     static async update(rq, data) {
         const id = rq.params.id
         if (!_.isEmpty(rq.files)) {

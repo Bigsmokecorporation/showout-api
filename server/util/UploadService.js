@@ -15,6 +15,15 @@ class UploadService {
         }
         return s3.putObject(data).promise()
     }
+    static async uploadFileBytes(buffer, filename, mimetype) {
+        const data = {
+            Key: filename,
+            Bucket: CONSTANTS.BUCKET,
+            Body: buffer,
+            ContentType: mimetype
+        }
+        return s3.putObject(data).promise()
+    }
 
     static async getSignedUrl(filename) {
         return s3.getSignedUrl('getObject', {
