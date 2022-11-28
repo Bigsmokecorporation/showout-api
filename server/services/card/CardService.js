@@ -65,10 +65,18 @@ class CardService {
         const data = {id, ...rq.body, ...{owner_id: user.id}}
 
 
-        if (data.media) {
-            const fileName = `media/raw/${id}`;
-            await UploadService.uploadFileBytes(data.media.bytes, fileName, 'audio/mp3');
-            data.media_url = `${CONSTANTS.S3}${fileName}`;
+        if (data.media && data.media_demo) {
+            const file_name = `media/raw/${id}`;
+            await UploadService.uploadFileBytes(data.media.bytes, file_name, 'audio/mpeg');
+            data.media_url = `${CONSTANTS.S3}${file_name}`;
+
+            const demo_file_name = `media/crop/${id}`;
+            await UploadService.uploadFileBytes(data.media_demo.bytes, demo_file_name, 'audio/mpeg');
+            data.media_demo_url = `${CONSTANTS.S3}${demo_file_name}`;
+
+            delete data.media
+            delete data.media_demo
+            delete data.cover_art
 
             UtilFunctions._clearNulls(data, true)
 
