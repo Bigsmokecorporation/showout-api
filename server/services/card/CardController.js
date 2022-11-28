@@ -14,9 +14,11 @@ class CardController {
         // const {artist_info, production_info, playlist_request, card_genre_id} = rq.body;
         // if (!(artist_info && production_info && playlist_request && card_genre_id))
         //     return UtilFunctions.outputError(rs, "One or more of [artist_info, production_info, playlist_request, card_genre_id] are missing");
+        console.log('CARD_BODY')
+        console.log(rq.body)
 
-        const {owner_id, card_genre_id} = rq.body;
-        if (!(owner_id && card_genre_id))
+        const {card_genre_id} = rq.body;
+        if (!(card_genre_id))
             return UtilFunctions.outputError(rs, "One or more of [owner_id, card_genre_id] are missing");
 
         try {
