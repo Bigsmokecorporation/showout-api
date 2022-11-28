@@ -1,9 +1,9 @@
-import UtilFunctions from "../../util/UtilFunctions.js";
-import UploadService from "../../util/UploadService.js";
-import responseCodes from "../../util/ResponseCodes.js";
-import httpStatus from "../../util/HttpStatus.js";
-import CardModel from "../../models/card.model.js";
-import HttpStatus from "../../util/HttpStatus.js";
+import UtilFunctions from "../../util/UtilFunctions.js"
+import UploadService from "../../util/UploadService.js"
+import responseCodes from "../../util/ResponseCodes.js"
+import httpStatus from "../../util/HttpStatus.js"
+import CardModel from "../../models/card.model.js"
+import HttpStatus from "../../util/HttpStatus.js"
 
 /**
  * Class represents card services.
@@ -24,19 +24,19 @@ class CardService {
 
         if (!_.isEmpty(rq.files)) {
             if (_.has(rq.files, 'media')) {
-                const fileName = `media/raw/${id}`;
-                await UploadService.uploadFile(rq.files.media[0], fileName);
-                data.media_url = `${CONSTANTS.S3}${fileName}`;
+                const fileName = `media/raw/${id}`
+                await UploadService.uploadFile(rq.files.media[0], fileName)
+                data.media_url = `${CONSTANTS.S3}${fileName}`
             }
             if (_.has(rq.files, 'cover_art')) {
-                const fileName = `media/cover/${id}`;
-                await UploadService.uploadFile(rq.files.cover_art[0], fileName);
-                data.cover_art_url = `${CONSTANTS.S3}${fileName}`;
+                const fileName = `media/cover/${id}`
+                await UploadService.uploadFile(rq.files.cover_art[0], fileName)
+                data.cover_art_url = `${CONSTANTS.S3}${fileName}`
             }
             if (_.has(rq.files, 'media_demo')) {
-                const fileName = `media/crop/${id}`;
-                await UploadService.uploadFile(rq.files.media_demo[0], fileName);
-                data.media_demo_url = `${CONSTANTS.S3}${fileName}`;
+                const fileName = `media/crop/${id}`
+                await UploadService.uploadFile(rq.files.media_demo[0], fileName)
+                data.media_demo_url = `${CONSTANTS.S3}${fileName}`
             }
 
             UtilFunctions._clearNulls(data, true)
@@ -64,15 +64,16 @@ class CardService {
         const id = UtilFunctions.genId()
         const data = {id, ...rq.body, ...{owner_id: user.id}}
 
-
         if (data.media && data.media_demo) {
-            const file_name = `media/raw/${id}`;
-            await UploadService.uploadFileBytes(data.media.bytes, file_name, 'audio/mpeg');
-            data.media_url = `${CONSTANTS.S3}${file_name}`;
+            const file_name = `media/raw/${id}`
+            const buffer = new Uint8Array(data.media.bytes)
+            await UploadService.uploadFileBytes(buffer, file_name, 'audio/mpeg')
+            data.media_url = `${CONSTANTS.S3}${file_name}`
 
-            const demo_file_name = `media/crop/${id}`;
-            await UploadService.uploadFileBytes(data.media_demo.bytes, demo_file_name, 'audio/mpeg');
-            data.media_demo_url = `${CONSTANTS.S3}${demo_file_name}`;
+            const demo_file_name = `media/crop/${id}`
+            const demo_buffer = new Uint8Array(data.media_demo.bytes)
+            await UploadService.uploadFileBytes(demo_buffer, demo_file_name, 'audio/mpeg')
+            data.media_demo_url = `${CONSTANTS.S3}${demo_file_name}`
 
             delete data.media
             delete data.media_demo
@@ -103,25 +104,25 @@ class CardService {
         const id = rq.params.id
         if (!_.isEmpty(rq.files)) {
             if (_.has(rq.files, 'media')) {
-                const fileName = `media/raw/${id}`;
-                await UploadService.uploadFile(rq.files.media[0], fileName);
-                data.media_url = `${CONSTANTS.S3}${fileName}`;
+                const fileName = `media/raw/${id}`
+                await UploadService.uploadFile(rq.files.media[0], fileName)
+                data.media_url = `${CONSTANTS.S3}${fileName}`
             }
             if (_.has(rq.files, 'cover_art')) {
-                const fileName = `media/cover/${id}`;
-                await UploadService.uploadFile(rq.files.cover_art[0], fileName);
-                data.cover_art_url = `${CONSTANTS.S3}${fileName}`;
+                const fileName = `media/cover/${id}`
+                await UploadService.uploadFile(rq.files.cover_art[0], fileName)
+                data.cover_art_url = `${CONSTANTS.S3}${fileName}`
             }
             if (_.has(rq.files, 'media_demo')) {
-                const fileName = `media/crop/${id}`;
-                await UploadService.uploadFile(rq.files.media_demo[0], fileName);
-                data.media_demo_url = `${CONSTANTS.S3}${fileName}`;
+                const fileName = `media/crop/${id}`
+                await UploadService.uploadFile(rq.files.media_demo[0], fileName)
+                data.media_demo_url = `${CONSTANTS.S3}${fileName}`
             }
         }
 
         const updated_card = await CardModel.update(id, data)
         if (updated_card)
-            return updated_card;
+            return updated_card
         throw new ShowOutError('Update failed')
     }
 
@@ -140,4 +141,4 @@ class CardService {
     }
 }
 
-export default CardService;
+export default CardService
