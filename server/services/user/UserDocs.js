@@ -30,6 +30,13 @@ export default (swagger) => {
                                     type: 'string',
                                     description: 'Mobile device token',
                                     example: 'dfuyfgeg8274t39y98y93yf0y02y0y28ry2r2oh938232hgfh2d947y932yh92'
+                                },
+                                terms_accepted: {
+                                    type: 'boolean'
+                                },
+                                terms_accepted_at: {
+                                    type: 'string',
+                                    example: '2022-01-01 12:00:00'
                                 }
                             }
                         }

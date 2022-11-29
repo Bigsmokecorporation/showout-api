@@ -43,7 +43,7 @@ class AuthService {
     }
 
     static async loginWithApple(rq) {
-        const {access_token, gcid} = rq.body
+        const {access_token, gcid, terms_accepted, terms_accepted_at} = rq.body
 
         const auth = new AppleAuth(
             {
@@ -78,6 +78,7 @@ class AuthService {
                 is_social_login: true,
                 is_active: true,
                 social_login_token: 'apple',
+                ...(terms_accepted && {terms_accepted, terms_accepted_at}),
                 ...(gcid && {gcid})
             })
             created_user.new_social_login = true
@@ -86,7 +87,7 @@ class AuthService {
     }
 
     static async loginWithFaceBook(rq) {
-        const {user_id, access_token, gcid} = rq.body
+        const {user_id, access_token, gcid, terms_accepted, terms_accepted_at} = rq.body
         const url = `https://graph.facebook.com/v9.0/${user_id}/?fields=id,name,email,picture&access_token=${access_token}`
         const payload = await Requests.get(url)
         let user = await UserModel.get(payload.email)
@@ -105,6 +106,7 @@ class AuthService {
                 is_active: true,
                 social_login_token: 'facebook',
                 ...(payload.picture && {photo_url: payload.picture.data.url}),
+                ...(terms_accepted && {terms_accepted, terms_accepted_at}),
                 ...(gcid && {gcid})
             })
             created_user.new_social_login = true
@@ -114,7 +116,7 @@ class AuthService {
 
     static async loginWithGoogle(rq) {
         const client = new OAuth2Client(process.env.GOOGLE_CLIENT)
-        const {access_token, gcid} = rq.body
+        const {access_token, gcid, terms_accepted, terms_accepted_at} = rq.body
         const ticket = await client.verifyIdToken({
             idToken: access_token,
             audience: [
@@ -139,6 +141,7 @@ class AuthService {
                 is_active: true,
                 social_login_token: 'google',
                 ...(payload.picture && {photo_url: payload.picture}),
+                ...(terms_accepted && {terms_accepted, terms_accepted_at}),
                 ...(gcid && {gcid})
             })
             created_user.new_social_login = true
