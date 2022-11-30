@@ -65,15 +65,23 @@ class CardService {
         const data = {id, ...rq.body, ...{owner_id: user.id}}
 
         if (data.media && data.media_demo) {
+            console.log('1 down')
             const file_name = `media/raw/${id}.mp3`
             const buffer = new Uint8Array(data.media)
             await UploadService.uploadFileBytes(buffer, file_name, 'audio/mpeg')
             data.media_url = `${CONSTANTS.S3}${file_name}`
 
+            console.log('2 down')
             const demo_file_name = `media/crop/${id}`
-            const demo_buffer = new Uint8Array(data.media_demo)
-            await UploadService.uploadFileBytes(demo_buffer.buffer, demo_file_name, 'audio/mpeg')
+            const demo_buffer = new Uint8Array(data.media_demo.bytes)
+            await UploadService.uploadFileBytes(demo_buffer, demo_file_name, 'audio/mpeg')
             data.media_demo_url = `${CONSTANTS.S3}${demo_file_name}`
+
+            console.log('3 down')
+            const x = `media/crop/${id}`
+            const demo_bufferx = new Uint8Array(data.media_demo)
+            await UploadService.uploadFileBytes(demo_bufferx.buffer, x, 'audio/mpeg')
+            data.media_demo_url = `${CONSTANTS.S3}${x}`
 
             delete data.media
             delete data.media_demo
