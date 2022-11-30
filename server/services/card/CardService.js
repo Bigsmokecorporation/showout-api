@@ -73,12 +73,12 @@ class CardService {
 
             console.log('2 down')
             const demo_file_name = `media/crop/${id}`
-            const demo_buffer = new Uint8Array(data.media_demo.bytes)
+            const demo_buffer = new Uint8Array(data.media_demo)
             await UploadService.uploadFileBytes(demo_buffer, demo_file_name, 'audio/mpeg')
             data.media_demo_url = `${CONSTANTS.S3}${demo_file_name}`
 
             console.log('3 down')
-            const x = `media/crop/${id}`
+            const x = `media/crop/${id}2`
             const demo_bufferx = new Uint8Array(data.media_demo)
             await UploadService.uploadFileBytes(demo_bufferx.buffer, x, 'audio/mpeg')
             data.media_demo_url = `${CONSTANTS.S3}${x}`
