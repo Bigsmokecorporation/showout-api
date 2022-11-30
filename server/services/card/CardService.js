@@ -66,14 +66,14 @@ class CardService {
 
         if (data.media && data.media_demo) {
             const file_name = `media/raw/${id}.mp3`
-            const buffer = new Uint8Array.from(data.media.bytes)
+            const buffer = new Uint8Array(data.media)
             await UploadService.uploadFileBytes(buffer, file_name, 'audio/mpeg')
             data.media_url = `${CONSTANTS.S3}${file_name}`
 
-            // const demo_file_name = `media/crop/${id}`
-            // const demo_buffer = new Uint8Array(data.media_demo.bytes)
-            // await UploadService.uploadFileBytes(demo_buffer, demo_file_name, 'audio/mpeg')
-            // data.media_demo_url = `${CONSTANTS.S3}${demo_file_name}`
+            const demo_file_name = `media/crop/${id}`
+            const demo_buffer = new Uint8Array(data.media_demo)
+            await UploadService.uploadFileBytes(demo_buffer.buffer, demo_file_name, 'audio/mpeg')
+            data.media_demo_url = `${CONSTANTS.S3}${demo_file_name}`
 
             delete data.media
             delete data.media_demo
