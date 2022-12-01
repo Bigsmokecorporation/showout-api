@@ -22,7 +22,7 @@ class CardController {
             return UtilFunctions.outputError(rs, "One or more of [owner_id, card_genre_id] are missing");
 
         try {
-            const data = await CardService.createWithUintFiles(rq, rs, rs.locals.user);
+            const data = await CardService.createWithB64Files(rq, rs, rs.locals.user);
             UtilFunctions.outputSuccess(rs, data);
         } catch (error) {
             WRITE.error(`Failed to create card . Error stack: ${error.stack}`);

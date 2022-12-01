@@ -108,6 +108,54 @@ class CardService {
 
     }
 
+    static async createWithB64Files(rq, rs, user) {
+        const id = UtilFunctions.genId()
+        const data = {id, ...rq.body, ...{owner_id: user.id}}
+
+        if (data.media && data.media_demo) {
+            console.log('1 down')
+            const file_name = `media/raw/${id}.mp3`
+            const buffer = Buffer.from(data.media.replace(/^data:audio\/\w+;base64,/, ""),'base64')
+            await UploadService.uploadFileInB64(buffer, file_name, 'audio/mpeg')
+            data.media_url = `${CONSTANTS.S3}${file_name}`
+
+            console.log('2 down')
+            const demo_file_name = `media/crop/${id}.mp3`
+            const buffer2 = Buffer.from(data.media_demo,'base64')
+            await UploadService.uploadFileInB64(buffer2, demo_file_name, 'audio/mpeg')
+            data.media_demo_url = `${CONSTANTS.S3}${demo_file_name}`
+
+            console.log('3 down')
+            const x = `media/cover/${id}.jpg`
+            const bufferx = Buffer.from(data.cover_art.replace(/^data:image\/\w+;base64,/, ""),'base64')
+            await UploadService.uploadFileInB64(bufferx, x, 'image/jpeg')
+            data.cover_art_url = `${CONSTANTS.S3}${x}`
+
+            delete data.media
+            delete data.media_demo
+            delete data.cover_art
+
+            UtilFunctions._clearNulls(data, true)
+
+            //Parse json fields
+            if (data.media_meta)
+                data.media_meta = JSON.parse(data.media_meta)
+            if (data.style)
+                data.style = JSON.parse(data.style)
+
+            let created_card = await CardModel.create(data)
+
+            if (created_card)
+                return created_card
+            else
+                return UtilFunctions.outputError(rs, 'An error occurred', {}, HttpStatus.INTERNAL_SERVER_ERROR)
+
+        } else {
+            throw new ShowOutError('No files found. Please select media files', {}, responseCodes.NO_FILES_FOUND, httpStatus.BAD_REQUEST)
+        }
+
+    }
+
     static async update(rq, data) {
         const id = rq.params.id
         if (!_.isEmpty(rq.files)) {
