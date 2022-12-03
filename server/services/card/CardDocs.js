@@ -234,6 +234,53 @@ export default (swagger) => {
         }
     }
 
+    swagger.paths['/card/random'] = {
+        get: {
+            tags: [
+                'Card'
+            ],
+            description: 'Retrieve random cards',
+            responses: {
+                200: {
+                    'description': 'Random cards retrieved.',
+                    'content': {
+                        'application/json': {
+                            'schema': {
+                                '$ref': '#/components/schemas/MultiCardResponse'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    swagger.paths['/card/search'] = {
+        get: {
+            tags: [
+                'Card'
+            ],
+            description: 'Retrieve cards matching keyword',
+            parameters: [
+                {
+                    in: 'query',
+                    name: 'keyword',
+                    description: 'Search by anything...'
+                }
+            ],
+            responses: {
+                200: {
+                    'description': 'Cards matching keyword retrieved.',
+                    'content': {
+                        'application/json': {
+                            'schema': {
+                                '$ref': '#/components/schemas/MultiCardResponse'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     swagger.paths['/card/list'] = {
         get: {
             tags: [
@@ -253,7 +300,10 @@ export default (swagger) => {
                     'content': {
                         'application/json': {
                             'schema': {
-                                '$ref': '#/components/schemas/CardResponse'
+                                type: 'array',
+                                items: {
+                                    '$ref': '#/components/schemas/MultiCardResponse'
+                                }
                             }
                         }
                     }
@@ -350,6 +400,13 @@ export default (swagger) => {
                 type: 'string',
                 format: '$date'
             },
+            terms_accepted_at: {
+                type: 'string',
+                format: '$date'
+            },
+            genre: {
+                type: 'string',
+            },
         }
     }
     swagger.components.schemas['CardResponse'] = {
@@ -361,6 +418,24 @@ export default (swagger) => {
             },
             data: {
                 $ref: '#/components/schemas/Card'
+            },
+            message: {
+                type: 'string'
+            }
+        }
+    }
+    swagger.components.schemas['MultiCardResponse'] = {
+        type: 'object',
+        properties: {
+            status: {
+                type: 'string',
+                example: 'SUCCESS'
+            },
+            data: {
+                type: 'array',
+                items: {
+                    '$ref': '#/components/schemas/Card'
+                }
             },
             message: {
                 type: 'string'

@@ -7,22 +7,17 @@ import UtilFunctions from "../../util/UtilFunctions.js";
 class CardController {
 
     static async create (rq, rs) {
-        // const {owner_id, owner_has_rights_to_upload, on_other_platforms, card_title} = rq.body;
-        // if (!(owner_id && owner_has_rights_to_upload && on_other_platforms && card_title))
-        //     return UtilFunctions.outputError(rs, "One or more of [owner_id, owner_has_rights_to_upload, on_other_platforms, card_title] are missing")
-        //
-        // const {artist_info, production_info, playlist_request, card_genre_id} = rq.body;
-        // if (!(artist_info && production_info && playlist_request && card_genre_id))
-        //     return UtilFunctions.outputError(rs, "One or more of [artist_info, production_info, playlist_request, card_genre_id] are missing");
-        // console.log('CARD_BODY')
-        // console.log(rq.body)
+        const {owner_has_rights_to_upload, on_other_platforms, card_title} = rq.body;
+        if (!(owner_has_rights_to_upload && on_other_platforms && card_title))
+            return UtilFunctions.outputError(rs, "One or more of [owner_has_rights_to_upload, on_other_platforms, card_title] are missing")
 
-        const {card_genre_id} = rq.body;
-        if (!(card_genre_id))
-            return UtilFunctions.outputError(rs, "One or more of [owner_id, card_genre_id] are missing");
+        const {artist_info, production_info, playlist_request, card_genre_id} = rq.body;
+        if (!(artist_info && production_info && playlist_request && card_genre_id))
+            return UtilFunctions.outputError(rs, "One or more of [artist_info, production_info, playlist_request, card_genre_id] are missing");
+
 
         try {
-            const data = await CardService.createWithB64Files(rq, rs, rs.locals.user);
+            const data = await CardService.create(rq, rs, rs.locals.user);
             UtilFunctions.outputSuccess(rs, data);
         } catch (error) {
             WRITE.error(`Failed to create card . Error stack: ${error.stack}`);
@@ -66,6 +61,26 @@ class CardController {
     static async list(rq, rs) {
         try {
             const data = await CardService.list(rq, rs.locals.user);
+            UtilFunctions.outputSuccess(rs, data);
+        } catch (error) {
+            WRITE.error(`Failed to get cards. Error stack: ${error.stack}`);
+            UtilFunctions.outputError(rs, error.message);
+        }
+    }
+
+    static async random(rq, rs) {
+        try {
+            const data = await CardService.listRandom(rq, rs.locals.user);
+            UtilFunctions.outputSuccess(rs, data);
+        } catch (error) {
+            WRITE.error(`Failed to get cards. Error stack: ${error.stack}`);
+            UtilFunctions.outputError(rs, error.message);
+        }
+    }
+
+    static async search(rq, rs) {
+        try {
+            const data = await CardService.search(rq.query.keyword, rs.locals.user);
             UtilFunctions.outputSuccess(rs, data);
         } catch (error) {
             WRITE.error(`Failed to get cards. Error stack: ${error.stack}`);

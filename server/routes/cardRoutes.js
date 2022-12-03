@@ -11,6 +11,8 @@ cardRoutes.post("/create", Auth, Upload.fields([
 cardRoutes.put("/update/:id", CardController.update);
 cardRoutes.get("/genres", CardController.genres);
 cardRoutes.get("/list", CardController.list);
+cardRoutes.get("/random", Auth, CardController.random);
+cardRoutes.get("/search", Auth, CardController.search);
 cardRoutes.get("/:id", CardController.get);
 
 export default cardRoutes;
