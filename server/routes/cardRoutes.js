@@ -15,4 +15,12 @@ cardRoutes.get("/random", Auth, CardController.random);
 cardRoutes.get("/search", Auth, CardController.search);
 cardRoutes.get("/:id", CardController.get);
 
+cardRoutes.get("/like/:id", CardController.likeCard);
+cardRoutes.get("/dislike/:id", CardController.disLikeCard);
+cardRoutes.get("/favorite/:id", CardController.favoriteCard);
+cardRoutes.get("/unfavorite/:id", CardController.unFavoriteCard);
+cardRoutes.get("/play/:id", CardController.recordCardPlay);
+
+
+
 export default cardRoutes;

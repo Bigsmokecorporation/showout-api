@@ -27,7 +27,7 @@ class CardController {
 
     static async get(rq, rs) {
         try {
-            const data = await CardService.get(rq.params.id);
+            const data = await CardService.get(rq.params.id, rs.locals.user);
             UtilFunctions.outputSuccess(rs, data);
         } catch (error) {
             WRITE.error(`Failed to get card details. Error stack: ${error.stack}`);
@@ -84,6 +84,56 @@ class CardController {
             UtilFunctions.outputSuccess(rs, data);
         } catch (error) {
             WRITE.error(`Failed to get cards. Error stack: ${error.stack}`);
+            UtilFunctions.outputError(rs, error.message);
+        }
+    }
+
+    static async likeCard(rq, rs) {
+        try {
+            await CardService.likeCard(rq.params.id, rs.locals.user);
+            UtilFunctions.outputSuccess(rs);
+        } catch (error) {
+            WRITE.error(`Failed to like card. Error stack: ${error.stack}`);
+            UtilFunctions.outputError(rs, error.message);
+        }
+    }
+
+    static async disLikeCard(rq, rs) {
+        try {
+            await CardService.disLikeCard(rq.params.id, rs.locals.user);
+            UtilFunctions.outputSuccess(rs);
+        } catch (error) {
+            WRITE.error(`Failed to dislike card. Error stack: ${error.stack}`);
+            UtilFunctions.outputError(rs, error.message);
+        }
+    }
+
+    static async favoriteCard(rq, rs) {
+        try {
+            await CardService.favoriteCard(rq.params.id, rs.locals.user);
+            UtilFunctions.outputSuccess(rs);
+        } catch (error) {
+            WRITE.error(`Failed to favorite card. Error stack: ${error.stack}`);
+            UtilFunctions.outputError(rs, error.message);
+        }
+    }
+
+    static async unFavoriteCard(rq, rs) {
+        try {
+            await CardService.unFavoriteCard(rq.params.id, rs.locals.user);
+            UtilFunctions.outputSuccess(rs);
+        } catch (error) {
+            WRITE.error(`Failed to un-favorite card. Error stack: ${error.stack}`);
+            UtilFunctions.outputError(rs, error.message);
+        }
+    }
+
+    static async recordCardPlay(rq, rs) {
+        try {
+            await CardService.recordCardPlay(rq.params.id, rs.locals.user);
+            UtilFunctions.outputSuccess(rs);
+        } catch (error) {
+            WRITE.error(`Failed to record card playback. Error stack: ${error.stack}`);
             UtilFunctions.outputError(rs, error.message);
         }
     }

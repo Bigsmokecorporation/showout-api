@@ -332,6 +332,158 @@ export default (swagger) => {
         }
     }
 
+    //  ACTIONS
+    swagger.paths['/card/like/{id}'] = {
+        get: {
+            tags: [
+                'Card'
+            ],
+            description: 'Likes a card',
+            parameters: [
+                {
+                    in: 'path',
+                    name: 'id',
+                    required: true,
+                    schema: {
+                        type: 'string'
+                    }
+                }
+            ],
+            responses: {
+                200: {
+                    'description': 'Card liked.',
+                    'content': {
+                        'application/json': {
+                            'schema': {
+                                '$ref': '#/components/schemas/Success'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    swagger.paths['/card/dislike/{id}'] = {
+        get: {
+            tags: [
+                'Card'
+            ],
+            description: 'Dislikes a card',
+            parameters: [
+                {
+                    in: 'path',
+                    name: 'id',
+                    required: true,
+                    schema: {
+                        type: 'string'
+                    }
+                }
+            ],
+            responses: {
+                200: {
+                    'description': 'Card disliked.',
+                    'content': {
+                        'application/json': {
+                            'schema': {
+                                '$ref': '#/components/schemas/Success'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    swagger.paths['/card/favorite/{id}'] = {
+        get: {
+            tags: [
+                'Card'
+            ],
+            description: 'Add a card to favorites',
+            parameters: [
+                {
+                    in: 'path',
+                    name: 'id',
+                    required: true,
+                    schema: {
+                        type: 'string'
+                    }
+                }
+            ],
+            responses: {
+                200: {
+                    'description': 'Card added to favorites.',
+                    'content': {
+                        'application/json': {
+                            'schema': {
+                                '$ref': '#/components/schemas/Success'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    swagger.paths['/card/unfavorite/{id}'] = {
+        get: {
+            tags: [
+                'Card'
+            ],
+            description: 'Remove card from favorites',
+            parameters: [
+                {
+                    in: 'path',
+                    name: 'id',
+                    required: true,
+                    schema: {
+                        type: 'string'
+                    }
+                }
+            ],
+            responses: {
+                200: {
+                    'description': 'Removed card from favorites.',
+                    'content': {
+                        'application/json': {
+                            'schema': {
+                                '$ref': '#/components/schemas/Success'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    swagger.paths['/card/play/{id}'] = {
+        get: {
+            tags: [
+                'Card'
+            ],
+            description: 'Plays a card',
+            parameters: [
+                {
+                    in: 'path',
+                    name: 'id',
+                    required: true,
+                    schema: {
+                        type: 'string'
+                    }
+                }
+            ],
+            responses: {
+                200: {
+                    'description': 'Card played.',
+                    'content': {
+                        'application/json': {
+                            'schema': {
+                                '$ref': '#/components/schemas/Success'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     swagger.components.schemas['Card'] = {
         type: 'object',
         properties: {

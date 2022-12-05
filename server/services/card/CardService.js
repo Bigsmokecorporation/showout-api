@@ -122,28 +122,74 @@ class CardService {
         throw new ShowOutError('Update failed')
     }
 
-    static async get(id) {
-        return CardModel.get(id, false)
+    static async get(id, user) {
+        return CardModel.get(id, user)
     }
 
-    static async list(rq) {
-        return CardModel.getMultiple(rq.query)
+    static async list(rq, user) {
+        return CardModel.getMultiple(rq.query, {}, user)
     }
 
     static async listRandom(rq, user) {
         return CardModel.getMultiple({}, {
             'owner_id': user.id
-        })
+        }, user)
     }
 
     static async search(keyword, user) {
-        return CardModel.search(keyword)
+        return CardModel.search(keyword, user)
     }
 
     static async genres() {
         let genres = await DB.select('*')
             .from('genres')
         return genres ?? []
+    }
+
+
+    //  ACTIONS
+
+    static async likeCard(card_id, user) {
+        await DB('likes')
+            .returning('*')
+            .insert({
+                id: UtilFunctions.genId(),
+                user_id: user.id,
+                card_id,
+            })
+    }
+
+    static async disLikeCard(card_id, user) {
+        await DB('likes')
+            .where({user_id: user.id, card_id})
+            .del()
+    }
+
+    static async favoriteCard(card_id, user) {
+        await DB('favorites')
+            .returning('*')
+            .insert({
+                id: UtilFunctions.genId(),
+                user_id: user.id,
+                card_id,
+            })
+    }
+
+    static async unFavoriteCard(card_id, user) {
+        await DB('favorites')
+            .where({user_id: user.id, card_id})
+            .del()
+    }
+
+    static async recordCardPlay(card_id, user) {
+
+        await DB('plays')
+            .returning('*')
+            .insert({
+                id: UtilFunctions.genId(),
+                user_id: user.id,
+                card_id,
+            })
     }
 }
 
