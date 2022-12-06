@@ -36,7 +36,7 @@ class CardModel {
         return false
     }
 
-    static async getMultiple(where = {}, whereNot = {}, user) {
+    static async getMultiple(where = {}, whereNot = {}, user = {}) {
         let default_query = await DB.select(['cards.*', 'genres.genre', 'users.stage_name'])
             .from('cards')
             .leftJoin('genres', 'cards.card_genre_id', '=', 'genres.id')
@@ -57,7 +57,7 @@ class CardModel {
             .from('cards')
             .leftJoin('genres', 'cards.card_genre_id', '=', 'genres.id')
             .leftJoin('users', 'cards.owner_id', '=', 'users.id')
-            .where('is_active', true)
+            .where('cards.is_active', true)
             .andWhere(function () {
                 this.whereILike('card_title', `%${keyword}%`)
                     .orWhereILike('artist_info', `%${keyword}%`)
