@@ -14,11 +14,11 @@ cardRoutes.get("/list", CardController.list);
 cardRoutes.get("/random", Auth, CardController.random);
 cardRoutes.get("/search", Auth, CardController.search);
 
-cardRoutes.get("/like/:id", CardController.likeCard);
-cardRoutes.get("/dislike/:id", CardController.disLikeCard);
-cardRoutes.get("/favorite/:id", CardController.favoriteCard);
-cardRoutes.get("/unfavorite/:id", CardController.unFavoriteCard);
-cardRoutes.get("/play/:id", CardController.recordCardPlay);
+cardRoutes.get("/like/:id", Auth, CardController.likeCard);
+cardRoutes.get("/dislike/:id", Auth, CardController.disLikeCard);
+cardRoutes.get("/favorite/:id", Auth, CardController.favoriteCard);
+cardRoutes.get("/unfavorite/:id", Auth, CardController.unFavoriteCard);
+cardRoutes.get("/play/:id", Auth, CardController.recordCardPlay);
 
 cardRoutes.get("/:id", CardController.get);
 
