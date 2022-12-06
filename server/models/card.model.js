@@ -7,7 +7,7 @@ class CardModel {
             .insert(data)
 
         if (new_card.length)
-            return get(new_card[0].id)
+            return CardModel.get(new_card[0].id)
         return false
     }
 
@@ -31,7 +31,7 @@ class CardModel {
             .returning(returning)
             .update(data)
         if (card.length) {
-            return this.get(id)
+            return CardModel.get(id)
         }
         return false
     }
