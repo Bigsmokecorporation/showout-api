@@ -24,4 +24,8 @@ jobs:
       run: npm install
       env:
         NODE_ENV: ci
+        API_KEY: ${{ secrets.API_KEY }}
+        BASE_URL: ${{ secrets.API_KEY }}
+        CONN: ${{ secrets.CONN }}
+        JWT: ${{ secrets.JWT }}
     - run: npm test --if-present
