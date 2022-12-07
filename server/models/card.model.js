@@ -36,13 +36,14 @@ class CardModel {
         return false
     }
 
-    static async getMultiple(where = {}, whereNot = {}, user = {}) {
+    static async getMultiple(where = {}, whereNot = {}, user = {}, limit = 500) {
         let default_query = await DB.select(['cards.*', 'genres.genre', 'users.stage_name'])
             .from('cards')
             .leftJoin('genres', 'cards.card_genre_id', '=', 'genres.id')
             .leftJoin('users', 'cards.owner_id', '=', 'users.id')
             .where(where)
             .whereNot(whereNot)
+            .limit(limit)
 
         const cards = await default_query
         for (const card of cards) {
@@ -52,7 +53,7 @@ class CardModel {
         return cards
     }
 
-    static async search(keyword, user) {
+    static async search(keyword, user, limit = 500) {
         let cards = await DB.select(['cards.*', 'genres.genre', 'users.stage_name'])
             .from('cards')
             .leftJoin('genres', 'cards.card_genre_id', '=', 'genres.id')
@@ -63,7 +64,9 @@ class CardModel {
                     .orWhereILike('artist_info', `%${keyword}%`)
                     .orWhereILike('production_info', `%${keyword}%`)
                     .orWhereILike('lyrics', `%${keyword}%`)
+                    .orWhereILike('stage_name', `%${keyword}%`)
             })
+            .limit(limit)
 
         for (const card of cards) {
             await this.populateCardDetails(card, user)
