@@ -141,7 +141,9 @@ class CardService {
     }
 
     static async popular(rq, user) {
-        return CardModel.popular(keyword, user)
+        return CardModel.getMultiple({}, {
+            'owner_id': user.id
+        }, user)
     }
 
     static async genres() {
