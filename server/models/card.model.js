@@ -75,13 +75,13 @@ class CardModel {
     static async populateCardDetails(card, user) {
         delete card.is_active
         if (card.media_url)
-            card.media_url = await UploadService.getSignedUrl(`media/raw/${card.id}`)
+            card.media_url = await UploadService.getSignedUrl(`media/raw/${card.id}.mp3`)
         if (card.media_demo_url)
-            card.media_demo_url = await UploadService.getSignedUrl(`media/crop/${card.id}`)
+            card.media_demo_url = await UploadService.getSignedUrl(`media/crop/${card.id}.mp3`)
         if (card.cover_art_url)
-            card.cover_art_url = await UploadService.getSignedUrl(`media/cover/${card.id}`)
+            card.cover_art_url = await UploadService.getSignedUrl(`media/cover/${card.id}.jpg`)
 
-        if (user) {
+        if (user && user.id) {
             card.is_liked = CardModel.isLiked(card.id, user.id)
             card.is_favorite = CardModel.isFavorite(card.id, user.id)
         }

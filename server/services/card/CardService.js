@@ -18,52 +18,11 @@ class CardService {
      * @param {Object} user
      */
     static async create(rq, rs, user) {
-        const id = UtilFunctions.genId()
-        const data = {id, ...rq.body, ...{owner_id: user.id}}
 
-        if (user.client === 'mobile') {
-
+        if (user.client === 'mobile')
             return CardService.createWithB64Files(rq, rs, user)
-
-        } else {
-
-            if (!_.isEmpty(rq.files)) {
-                if (_.has(rq.files, 'media')) {
-                    const fileName = `media/raw/${id}.mp3`
-                    await UploadService.uploadFile(rq.files.media[0], fileName)
-                    data.media_url = `${CONSTANTS.S3}${fileName}`
-                }
-                if (_.has(rq.files, 'cover_art')) {
-                    const fileName = `media/cover/${id}.jpg`
-                    await UploadService.uploadFile(rq.files.cover_art[0], fileName)
-                    data.cover_art_url = `${CONSTANTS.S3}${fileName}`
-                }
-                if (_.has(rq.files, 'media_demo')) {
-                    const fileName = `media/crop/${id}.mp3`
-                    await UploadService.uploadFile(rq.files.media_demo[0], fileName)
-                    data.media_demo_url = `${CONSTANTS.S3}${fileName}`
-                }
-
-                UtilFunctions._clearNulls(data, true)
-
-                //Parse json fields
-                if (data.media_meta)
-                    data.media_meta = JSON.parse(data.media_meta)
-                if (data.style)
-                    data.style = JSON.parse(data.style)
-
-                let created_card = await CardModel.create(data)
-
-                if (created_card)
-                    return created_card
-                else
-                    return UtilFunctions.outputError(rs, 'An error occurred', {}, HttpStatus.INTERNAL_SERVER_ERROR)
-
-            } else {
-                throw new ShowOutError('No files found. Please select media files', {}, responseCodes.NO_FILES_FOUND, HttpStatus.BAD_REQUEST)
-            }
-
-        }
+        else
+            return CardService.createWithMultipart(rq, rs, user)
     }
 
     static async createWithB64Files(rq, rs, user) {
@@ -73,19 +32,19 @@ class CardService {
         if (data.media && data.media_demo) {
             console.log('1 down')
             const file_name = `media/raw/${id}.mp3`
-            const buffer = Buffer.from(data.media.replace(/^data:audio\/\w+;base64,/, ""),'base64')
+            const buffer = Buffer.from(data.media.replace(/^data:audio\/\w+;base64,/, ""), 'base64')
             await UploadService.uploadFileInB64(buffer, file_name, 'audio/mpeg')
             data.media_url = `${CONSTANTS.S3}${file_name}`
 
             console.log('2 down')
             const demo_file_name = `media/crop/${id}.mp3`
-            const buffer2 = Buffer.from(data.media_demo,'base64')
+            const buffer2 = Buffer.from(data.media_demo, 'base64')
             await UploadService.uploadFileInB64(buffer2, demo_file_name, 'audio/mpeg')
             data.media_demo_url = `${CONSTANTS.S3}${demo_file_name}`
 
             console.log('3 down')
             const x = `media/cover/${id}.jpg`
-            const bufferx = Buffer.from(data.cover_art.replace(/^data:image\/\w+;base64,/, ""),'base64')
+            const bufferx = Buffer.from(data.cover_art.replace(/^data:image\/\w+;base64,/, ""), 'base64')
             await UploadService.uploadFileInB64(bufferx, x, 'image/jpeg')
             data.cover_art_url = `${CONSTANTS.S3}${x}`
 
@@ -114,6 +73,47 @@ class CardService {
 
     }
 
+    static async createWithMultipart(rq, rs, user) {
+        const id = UtilFunctions.genId()
+        const data = {id, ...rq.body, ...{owner_id: user.id}}
+
+        if (!_.isEmpty(rq.files)) {
+            if (_.has(rq.files, 'media')) {
+                const fileName = `media/raw/${id}.mp3`
+                await UploadService.uploadFile(rq.files.media[0], fileName)
+                data.media_url = `${CONSTANTS.S3}${fileName}`
+            }
+            if (_.has(rq.files, 'cover_art')) {
+                const fileName = `media/cover/${id}.jpg`
+                await UploadService.uploadFile(rq.files.cover_art[0], fileName)
+                data.cover_art_url = `${CONSTANTS.S3}${fileName}`
+            }
+            if (_.has(rq.files, 'media_demo')) {
+                const fileName = `media/crop/${id}.mp3`
+                await UploadService.uploadFile(rq.files.media_demo[0], fileName)
+                data.media_demo_url = `${CONSTANTS.S3}${fileName}`
+            }
+
+            UtilFunctions._clearNulls(data, true)
+
+            //Parse json fields
+            if (data.media_meta)
+                data.media_meta = JSON.parse(data.media_meta)
+            if (data.style)
+                data.style = JSON.parse(data.style)
+
+            let created_card = await CardModel.create(data)
+
+            if (created_card)
+                return created_card
+            else
+                return UtilFunctions.outputError(rs, 'An error occurred', {}, HttpStatus.INTERNAL_SERVER_ERROR)
+
+        } else {
+            throw new ShowOutError('No files found. Please select media files', {}, responseCodes.NO_FILES_FOUND, HttpStatus.BAD_REQUEST)
+        }
+    }
+
     static async update(rq, data) {
         const id = rq.params.id
         const updated_card = await CardModel.update(id, data)
@@ -138,6 +138,10 @@ class CardService {
 
     static async search(keyword, user) {
         return CardModel.search(keyword, user)
+    }
+
+    static async popular(rq, user) {
+        return CardModel.popular(keyword, user)
     }
 
     static async genres() {
