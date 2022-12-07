@@ -23,10 +23,10 @@ jobs:
         cache: 'npm'
     - name: Install dependencies
       run: npm install
+    - run: npm run test_ci
       env:
         NODE_ENV: ci
         API_KEY: ${{ secrets.API_KEY }}
         BASE_URL: ${{ secrets.API_KEY }}
         CONN: ${{ secrets.CONN }}
         JWT: ${{ secrets.JWT }}
-    - run: npm run test_ci
