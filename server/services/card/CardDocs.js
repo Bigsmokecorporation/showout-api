@@ -290,8 +290,13 @@ export default (swagger) => {
             parameters: [
                 {
                     in: 'query',
-                    name: 'user_id',
-                    description: 'user id, to fetch user\'s cards'
+                    name: 'owner_id',
+                    description: 'owner id, to fetch user\'s cards'
+                },
+                {
+                    in: 'query',
+                    name: 'card_genre_id',
+                    description: 'genre id cards to fetch'
                 }
             ],
             responses: {
