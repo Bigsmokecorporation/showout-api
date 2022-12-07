@@ -31,6 +31,18 @@ describe('Card Tests', () => {
             assert.equal(rs.statusCode, 200);
         });
 
+        it('Should be able to list random cards', async () => {
+            const rs = await request(process.env.BASE_URL)
+                .get('/card/random')
+                .set({
+                    Authorization: `Bearer ${requestPayload.token}`,
+                    'x-api-key': process.env.API_KEY,
+                });
+            expect(rs.body.status).to.be.status;
+            assert.equal(rs.body.status, 'SUCCESS');
+            assert.equal(rs.statusCode, 200);
+        });
+
         it('Should be able to search cards', async () => {
             const rs = await request(process.env.BASE_URL)
                 .get('/card/search?keyword=')
