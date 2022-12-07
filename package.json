@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "NODE_ENV=local mocha test/tests.js --exit",
+    "test-ci": "mocha test/tests.js --exit",
     "debug": "nodemon index.js",
     "start": "node index.js"
   },
