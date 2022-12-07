@@ -88,6 +88,16 @@ class CardController {
         }
     }
 
+    static async popular(rq, rs) {
+        try {
+            const data = await CardService.popular(rq, rs.locals.user);
+            UtilFunctions.outputSuccess(rs, data);
+        } catch (error) {
+            WRITE.error(`Failed to get cards. Error stack: ${error.stack}`);
+            UtilFunctions.outputError(rs, error.message);
+        }
+    }
+
     static async likeCard(rq, rs) {
         try {
             await CardService.likeCard(rq.params.id, rs.locals.user);
