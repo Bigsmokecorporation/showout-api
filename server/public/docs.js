@@ -4,12 +4,14 @@ import AuthDocs from '../services/auth/AuthDocs.js'
 import UserDocs from "../services/user/UserDocs.js";
 import AdminDocs from "../services/admin/AdminDocs.js";
 import CardDocs from "../services/card/CardDocs.js";
+import PlaylistDocs from "../services/playlist/PlaylistDocs.js";
 
 let dc = CONSTANTS.DOCS;
 dc = AuthDocs(dc);
 dc = UserDocs(dc);
 dc = AdminDocs(dc);
 dc = CardDocs(dc);
+dc = PlaylistDocs(dc);
 
 export default function (router) {
     router.get('/json', (req, res) => {

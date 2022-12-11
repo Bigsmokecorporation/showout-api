@@ -316,6 +316,75 @@ export default (swagger) => {
             }
         }
     }
+    swagger.paths['/card/popular'] = {
+        get: {
+            tags: [
+                'Card'
+            ],
+            description: 'Retrieve popular cards',
+            responses: {
+                200: {
+                    'description': 'Popular cards retrieved.',
+                    'content': {
+                        'application/json': {
+                            'schema': {
+                                type: 'array',
+                                items: {
+                                    '$ref': '#/components/schemas/MultiCardResponse'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    swagger.paths['/card/recently-played'] = {
+        get: {
+            tags: [
+                'Card'
+            ],
+            description: 'Retrieve recently-played cards',
+            responses: {
+                200: {
+                    'description': 'Recently-played cards retrieved.',
+                    'content': {
+                        'application/json': {
+                            'schema': {
+                                type: 'array',
+                                items: {
+                                    '$ref': '#/components/schemas/MultiCardResponse'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    swagger.paths['/card/trending'] = {
+        get: {
+            tags: [
+                'Card'
+            ],
+            description: 'Retrieve trending cards',
+            responses: {
+                200: {
+                    'description': 'Trending cards retrieved.',
+                    'content': {
+                        'application/json': {
+                            'schema': {
+                                type: 'array',
+                                items: {
+                                    '$ref': '#/components/schemas/MultiCardResponse'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     swagger.paths['/card/genres'] = {
         get: {
             tags: [

@@ -88,12 +88,22 @@ class CardController {
         }
     }
 
-    static async popular(rq, rs) {
+    static async popularCards(rq, rs) {
         try {
-            const data = await CardService.popular(rq, rs.locals.user);
+            const data = await CardService.popularCards(rq, rs.locals.user);
             UtilFunctions.outputSuccess(rs, data);
         } catch (error) {
-            WRITE.error(`Failed to get cards. Error stack: ${error.stack}`);
+            WRITE.error(`Failed to get popular cards. Error stack: ${error.stack}`);
+            UtilFunctions.outputError(rs, error.message);
+        }
+    }
+
+    static async trendingCards(rq, rs) {
+        try {
+            const data = await CardService.trendingCards(rq, rs.locals.user);
+            UtilFunctions.outputSuccess(rs, data);
+        } catch (error) {
+            WRITE.error(`Failed to get trending cards. Error stack: ${error.stack}`);
             UtilFunctions.outputError(rs, error.message);
         }
     }
@@ -144,6 +154,16 @@ class CardController {
             UtilFunctions.outputSuccess(rs);
         } catch (error) {
             WRITE.error(`Failed to record card playback. Error stack: ${error.stack}`);
+            UtilFunctions.outputError(rs, error.message);
+        }
+    }
+
+    static async playedCards(rq, rs) {
+        try {
+            await CardService.playedCards(rq.params, rs.locals.user);
+            UtilFunctions.outputSuccess(rs);
+        } catch (error) {
+            WRITE.error(`Failed to get played cards. Error stack: ${error.stack}`);
             UtilFunctions.outputError(rs, error.message);
         }
     }

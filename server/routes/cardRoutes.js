@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import CardController from "../services/card/CardController.js";
-import Auth from "../middleware/auth.js";
+import {Auth} from "../middleware/auth.js";
 import Upload from "../middleware/upload.js";
 
 const cardRoutes = Router();
@@ -13,7 +13,9 @@ cardRoutes.get("/genres", CardController.genres);
 cardRoutes.get("/list", Auth, CardController.list);
 cardRoutes.get("/random", Auth, CardController.random);
 cardRoutes.get("/search", Auth, CardController.search);
-cardRoutes.get("/popular", Auth, CardController.popular);
+cardRoutes.get("/popular", Auth, CardController.popularCards);
+cardRoutes.get("/trending", Auth, CardController.trendingCards);
+cardRoutes.get("/recently-played", Auth, CardController.playedCards);
 
 cardRoutes.get("/like/:id", Auth, CardController.likeCard);
 cardRoutes.get("/dislike/:id", Auth, CardController.disLikeCard);

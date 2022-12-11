@@ -1,5 +1,5 @@
-import dotenv from 'dotenv';
-dotenv.config();
+import dotenv from 'dotenv'
+dotenv.config()
 
 export default {
     LOG_LEVEL: 'debug',
@@ -48,10 +48,10 @@ export default {
                         },
                         message: {
                             type: 'string'
-                        },
+                        }
                     }
                 },
             }
         }
     }
-};
+}

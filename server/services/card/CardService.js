@@ -18,7 +18,6 @@ class CardService {
      * @param {Object} user
      */
     static async create(rq, rs, user) {
-
         if (user.client === 'mobile')
             return CardService.createWithB64Files(rq, rs, user)
         else
@@ -140,10 +139,29 @@ class CardService {
         return CardModel.search(keyword, user)
     }
 
-    static async popular(rq, user) {
+    //  TIMELINE
+
+    static async popularCards(rq, user) {
         return CardModel.getMultiple({}, {
             'owner_id': user.id
         }, user)
+    }
+
+    static async trendingCards(rq, user) {
+        return CardModel.getMultiple({}, {
+            'owner_id': user.id
+        }, user)
+    }
+
+    static async playedCards(rq, user) {
+        const playedCards = await DB('plays')
+            .where({user_id: user.id})
+
+        for (const card of playedCards) {
+            await CardModel.populateCardDetails(card, user)
+        }
+
+        return playedCards
     }
 
     static async genres() {
