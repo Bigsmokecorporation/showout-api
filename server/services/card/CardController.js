@@ -108,6 +108,16 @@ class CardController {
         }
     }
 
+    static async playedCards(rq, rs) {
+        try {
+            await CardService.playedCards(rq.params, rs.locals.user);
+            UtilFunctions.outputSuccess(rs, data);
+        } catch (error) {
+            WRITE.error(`Failed to get played cards. Error stack: ${error.stack}`);
+            UtilFunctions.outputError(rs, error.message);
+        }
+    }
+
     static async likeCard(rq, rs) {
         try {
             await CardService.likeCard(rq.params.id, rs.locals.user);
@@ -154,16 +164,6 @@ class CardController {
             UtilFunctions.outputSuccess(rs);
         } catch (error) {
             WRITE.error(`Failed to record card playback. Error stack: ${error.stack}`);
-            UtilFunctions.outputError(rs, error.message);
-        }
-    }
-
-    static async playedCards(rq, rs) {
-        try {
-            await CardService.playedCards(rq.params, rs.locals.user);
-            UtilFunctions.outputSuccess(rs);
-        } catch (error) {
-            WRITE.error(`Failed to get played cards. Error stack: ${error.stack}`);
             UtilFunctions.outputError(rs, error.message);
         }
     }
