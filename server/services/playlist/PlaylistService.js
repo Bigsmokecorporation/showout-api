@@ -18,6 +18,14 @@ class PlaylistService {
         return PlaylistModel.createTrack(data)
     }
 
+    static async get(id, user) {
+        return PlaylistModel.get(id, user)
+    }
+
+    static async list(rq, user) {
+        return PlaylistModel.getMultiple(rq.query, {}, user)
+    }
+
     static async create (rq) {
         const data = rq.body
         data.approved = false

@@ -19,6 +19,13 @@ export default (swagger) => {
                                     type: 'string',
                                     format: 'binary'
                                 },
+                                cover_art_type: {
+                                    type: 'string',
+                                    enum: [
+                                        'png',
+                                        'jpg'
+                                    ],
+                                },
                                 media_demo: {
                                     type: 'string',
                                     format: 'binary'
@@ -55,22 +62,8 @@ export default (swagger) => {
                                         x: 'y'
                                     }
                                 },
-                                stream_info: {
-                                    type: 'string'
-                                },
-                                share_value: {
-                                    type: 'numeric'
-                                },
                                 terms_accepted: {
                                     type: 'boolean'
-                                },
-                                card_type: {
-                                    type: 'string',
-                                    enum: [
-                                        'music',
-                                        'artwork'
-                                    ],
-                                    default: 'music'
                                 },
                                 card_genre_id: {
                                     type: 'string',

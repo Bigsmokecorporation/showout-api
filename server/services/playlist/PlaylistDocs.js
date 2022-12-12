@@ -1,4 +1,50 @@
 export default (swagger) => {
+    swagger.paths['/playlist/{id}'] = {
+        get: {
+            tags: [
+                'Playlist'
+            ],
+            description: 'Gets a playlist',
+            parameters: [
+                {
+                    in: 'path',
+                    name: 'id'
+                }
+            ],
+            responses: {
+                200: {
+                    'description': 'Fetches playlist.',
+                    'content': {
+                        'application/json': {
+                            'schema': {
+                                '$ref': '#/components/schemas/PlaylistResponse'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    swagger.paths['/playlist/list'] = {
+        get: {
+            tags: [
+                'Playlist'
+            ],
+            description: 'Gets all playlists',
+            responses: {
+                200: {
+                    'description': 'Fetches all playlists.',
+                    'content': {
+                        'application/json': {
+                            'schema': {
+                                '$ref': '#/components/schemas/MultiPlaylistResponse'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     swagger.paths['/playlist/create'] = {
         post: {
             tags: [
@@ -73,7 +119,7 @@ export default (swagger) => {
             }
         }
     }
-    swagger.paths['/playlist/add-tracks/:playlist_id'] = {
+    swagger.paths['/playlist/add-tracks/{playlist_id}'] = {
         post: {
             tags: [
                 'Playlist'
@@ -109,6 +155,54 @@ export default (swagger) => {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    swagger.components.schemas['Playlist'] = {
+        type: 'object',
+        properties: {
+            id: {
+                type: 'string'
+            },
+            title: {
+                type: 'string'
+            },
+            description: {
+                type: 'string'
+            }
+        }
+    }
+    swagger.components.schemas['PlaylistResponse'] = {
+        type: 'object',
+        properties: {
+            status: {
+                type: 'string',
+                example: 'SUCCESS'
+            },
+            data: {
+                $ref: '#/components/schemas/Playlist'
+            },
+            message: {
+                type: 'string'
+            }
+        }
+    }
+    swagger.components.schemas['MultiPlaylistResponse'] = {
+        type: 'object',
+        properties: {
+            status: {
+                type: 'string',
+                example: 'SUCCESS'
+            },
+            data: {
+                type: 'array',
+                items: {
+                    '$ref': '#/components/schemas/Playlist'
+                }
+            },
+            message: {
+                type: 'string'
             }
         }
     }

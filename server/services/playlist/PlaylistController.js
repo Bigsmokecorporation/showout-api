@@ -44,6 +44,29 @@ class PlaylistController {
         }
     }
 
+    static async get(rq, rs) {
+        if (!rq.params.id)
+            return UtilFunctions.outputError(rs, 'Id is required')
+
+        try {
+            const data = await PlaylistService.get(rq.params.id, rs.locals.user);
+            UtilFunctions.outputSuccess(rs, data);
+        } catch (error) {
+            WRITE.error(`Failed to get playlist details. Error stack: ${error.stack}`);
+            UtilFunctions.outputError(rs, error.message);
+        }
+    }
+
+    static async list(rq, rs) {
+        try {
+            const data = await PlaylistService.list(rq, rs.locals.user);
+            UtilFunctions.outputSuccess(rs, data);
+        } catch (error) {
+            WRITE.error(`Failed to get playlists. Error stack: ${error.stack}`);
+            UtilFunctions.outputError(rs, error.message);
+        }
+    }
+
     static async addTracks(rq, rs) {
         const {tracks} = rq.body
         if (!tracks)
