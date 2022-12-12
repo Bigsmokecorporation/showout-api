@@ -41,7 +41,7 @@ class PlaylistModel {
     }
 
     static async populateTracks(playlist_id, approved = true) {
-        return DB('playlists')
+        return DB('tracks')
             .where({
                 playlist_id,
                 approved
