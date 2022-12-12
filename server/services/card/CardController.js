@@ -11,10 +11,9 @@ class CardController {
         if (!(owner_has_rights_to_upload && on_other_platforms && card_title))
             return UtilFunctions.outputError(rs, "One or more of [owner_has_rights_to_upload, on_other_platforms, card_title] are missing")
 
-        const {artist_info, production_info, playlist_request, card_genre_id} = rq.body;
-        if (!(artist_info && production_info && playlist_request && card_genre_id))
+        const {artist_info, production_info, card_genre_id} = rq.body;
+        if (!(artist_info && production_info && card_genre_id))
             return UtilFunctions.outputError(rs, "One or more of [artist_info, production_info, playlist_request, card_genre_id] are missing");
-
 
         try {
             const data = await CardService.create(rq, rs, rs.locals.user);
@@ -110,7 +109,7 @@ class CardController {
 
     static async playedCards(rq, rs) {
         try {
-            await CardService.playedCards(rq.params, rs.locals.user);
+            const data = await CardService.playedCards(rq.params, rs.locals.user);
             UtilFunctions.outputSuccess(rs, data);
         } catch (error) {
             WRITE.error(`Failed to get played cards. Error stack: ${error.stack}`);

@@ -85,8 +85,8 @@ class CardModel {
             card.cover_art_url = await UploadService.getSignedUrl(`media/cover/${card.id}.jpg`)
 
         if (user && user.id) {
-            card.is_liked = CardModel.isLiked(card.id, user.id)
-            card.is_favorite = CardModel.isFavorite(card.id, user.id)
+            card.is_liked = await CardModel.isLiked(card.id, user.id)
+            card.is_favorite = await CardModel.isFavorite(card.id, user.id)
         }
     }
 
