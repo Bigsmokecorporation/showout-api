@@ -70,7 +70,7 @@ class AuthController {
             UtilFunctions.outputSuccess(rs, data)
         } catch (error) {
             WRITE.error(`Verification failed. Error stack: ${error.stack}`)
-            UtilFunctions.outputError(rs, error.message)
+            UtilFunctions.outputError(rs, error.message, error.data, error.responseCode)
         }
     }
 

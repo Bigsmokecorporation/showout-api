@@ -1,3 +1,5 @@
+import CardModel from "./card.model.js";
+
 class PlaylistModel {
 
     static async create(data) {
@@ -9,7 +11,8 @@ class PlaylistModel {
     }
 
     static async get(id) {
-        let playlists = await DB('playlists')
+        let playlists = await DB.select('*')
+            .from('playlists')
             .where({id})
 
         if (playlists.length) {
@@ -22,7 +25,8 @@ class PlaylistModel {
     }
 
     static async getMultiple(where) {
-        let playlists = await DB('playlists')
+        let playlists = await DB.select('*')
+            .from('playlists')
             .where(where)
 
         for (const playlist of playlists) {
@@ -40,12 +44,27 @@ class PlaylistModel {
         return new_list.length ? new_list[0] : false
     }
 
-    static async populateTracks(playlist_id, approved = true) {
-        return DB('tracks')
+    static async populateTracks(playlist, approved = true) {
+        const cards = await DB.select('card_id')
+            .from('tracks')
             .where({
-                playlist_id,
+                playlist_id: playlist.id,
                 approved
             })
+
+        if (cards.length) {
+            const card_ids = cards.map(c => c.card_id)
+            const card_details = await DB.select('id', 'card_title', 'media_url', 'cover_art_url', 'media_demo_url')
+                .from('cards')
+                .whereIn('id', card_ids)
+
+            if (card_details) {
+                for (const c of card_details)
+                    await CardModel.populateCardDetails(c)
+                playlist.track_list = card_details
+            }
+
+        }
     }
 
     static async update(id, data, returning = '*') {

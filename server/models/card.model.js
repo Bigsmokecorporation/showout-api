@@ -75,7 +75,7 @@ class CardModel {
         return cards
     }
 
-    static async populateCardDetails(card, user) {
+    static async populateCardDetails(card, user = {}) {
         delete card.is_active
         if (card.media_url)
             card.media_url = await UploadService.getSignedUrl(`media/raw/${card.id}.mp3`)

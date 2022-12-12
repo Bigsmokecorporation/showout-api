@@ -14,12 +14,13 @@ export function Auth (rq, rs, next) {
 
     jwt.verify(token.toString().substring(6).trim(), process.env.JWT, async (err, tokenData) => {
         if (!err) {
-            const account = await UserModel.get(tokenData.id)
-            if (account) {
-                rs.locals.user = {...account, ...{client}}
+            const user_account = await UserModel.get(tokenData.id)
+            const admin_account = await AdminModel.get(tokenData.id)
+
+            if (user_account || admin_account) {
+                rs.locals.user = {...user_account, ...admin_account, ...{client}}
             } else
                 return UtilFunctions.outputError(rs, 'An authorization token is required for authentication', {}, HttpStatus.UNAUTHORIZED)
-            console.log('authenticated')
             return next()
         } else
             return UtilFunctions.outputError(rs, 'The authorization token is invalid', {}, ResponseCodes.INVALID_TOKEN, HttpStatus.UNAUTHORIZED)

@@ -15,6 +15,7 @@ class PlaylistService {
      */
     static async requestToJoin (rq, user) {
         const data = rq.body
+        data.id = UtilFunctions.genId()
         return PlaylistModel.createTrack(data)
     }
 

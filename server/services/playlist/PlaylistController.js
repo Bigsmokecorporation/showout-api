@@ -14,9 +14,9 @@ class PlaylistController {
      * @param {Object} rs Response
      */
     static async requestToJoin(rq, rs) {
-        const {play_list_id, card_id} = rq.body
-        if (!play_list_id || !card_id)
-            return UtilFunctions.outputError(rs, 'Both play_list_id and card_id are required')
+        const {playlist_id, card_id} = rq.body
+        if (!playlist_id || !card_id)
+            return UtilFunctions.outputError(rs, 'Both playlist_id and card_id are required')
 
         try {
             const data = await PlaylistService.requestToJoin(rq, rs.locals.user);

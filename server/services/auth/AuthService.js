@@ -165,7 +165,7 @@ class AuthService {
                 rs.locals.user = updated_user
                 return updated_user
             } else
-                throw new ShowOutError('Token verification failed', ResponseCodes.INVALID_CODE)
+                throw new ShowOutError('Token verification failed', {}, ResponseCodes.INVALID_CODE)
         } else
             throw new ShowOutError(`There's no pending verification for this user`)
     }

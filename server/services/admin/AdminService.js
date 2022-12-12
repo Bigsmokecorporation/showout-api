@@ -28,7 +28,7 @@ class AdminService {
             delete admin.password
             await UtilFunctions.tokenizeUser(admin)
             await AdminModel.update(admin.id, {refresh_token: admin.refresh_token})
-            rs.locals.admin = admin
+            rs.locals.user = admin
             return admin
         }
     }
@@ -69,7 +69,7 @@ class AdminService {
                 const updated_admin = await AdminModel.update(id, {is_active: valid})
                 await UtilFunctions.tokenizeUser(updated_admin)
                 await UserModel.update(updated_admin.id, {refresh_token: updated_admin.refresh_token})
-                rs.locals.admin = updated_admin
+                rs.locals.user = updated_admin
                 return updated_admin
             } else
                 throw new ShowOutError('Token verification failed', ResponseCodes.INVALID_CODE)
