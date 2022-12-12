@@ -1,9 +1,10 @@
-import UtilFunctions from "../../util/UtilFunctions.js";
-import AdminModel from "../../models/admin.model.js";
-import bCrypt from "bcryptjs";
-import ResponseCodes from "../../util/ResponseCodes.js";
-import UserModel from "../../models/user.model.js";
-import HttpStatus from "../../util/HttpStatus.js";
+import UtilFunctions from "../../util/UtilFunctions.js"
+import AdminModel from "../../models/admin.model.js"
+import bCrypt from "bcryptjs"
+import ResponseCodes from "../../util/ResponseCodes.js"
+import UserModel from "../../models/user.model.js"
+import HttpStatus from "../../util/HttpStatus.js"
+import EmailModel from "../../models/email.model.js"
 
 /**
  * Class represents services.
@@ -41,6 +42,39 @@ class AdminService {
             return admin
         } else
             throw new ShowOutError('Failed to validate refresh token', {}, ResponseCodes.INVALID_REFRESH_TOKEN)
+    }
+
+    static async forgotPassword(rq) {
+        const {email} = rq.body
+        const admin = await AdminModel.get(email)
+        if (!admin)
+            throw new ShowOutError('Failed to identify user', {})
+
+        let token = UtilFunctions.genId(30)
+        await UserModel.createVerification(admin.id, token)
+        await EmailModel.sendMailUsingTemplate(process.env.PASS_RESET_TMP, admin.id, {
+            full_name: admin.full_name,
+            id: admin.id,
+            token: token
+        }, email)
+    }
+
+    static async verify(rq, rs) {
+        const {id, token} = rq.body
+        const hasPendingVerification = await UserModel.hasPendingVerification(id)
+        if (hasPendingVerification) {
+            const valid = await UserModel.validateVerificationToken(id, token)
+            if (valid) {
+                await UserModel.updateVerificationStatus(id, valid)
+                const updated_admin = await AdminModel.update(id, {is_active: valid})
+                await UtilFunctions.tokenizeUser(updated_admin)
+                await UserModel.update(updated_admin.id, {refresh_token: updated_admin.refresh_token})
+                rs.locals.admin = updated_admin
+                return updated_admin
+            } else
+                throw new ShowOutError('Token verification failed', ResponseCodes.INVALID_CODE)
+        } else
+            throw new ShowOutError(`There's no pending verification for this user`)
     }
 
     static async getUsers(rq) {
@@ -92,9 +126,9 @@ class AdminService {
         const data = rq.body
         const updated_admin = await AdminModel.update(rq.params.id, data)
         if (updated_admin)
-            return updated_admin;
+            return updated_admin
         throw new ShowOutError('Update failed')
     }
 }
 
-export default AdminService;
+export default AdminService

@@ -197,7 +197,6 @@ class AuthService {
             id: user.id,
             token: token
         }, email)
-
     }
 
     static async resendCode(rq) {
