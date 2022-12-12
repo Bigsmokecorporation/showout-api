@@ -150,7 +150,7 @@ class CardService {
         }, user)
     }
 
-    static async playedCards(rq, user = {id: '111384965572819585917'}) {
+    static async playedCards(rq, user) {
         const playedCards = await DB.select('*')
             .from('plays')
             .where({user_id: user.id})
