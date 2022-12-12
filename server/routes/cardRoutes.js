@@ -10,11 +10,11 @@ cardRoutes.post("/create", Auth, Upload.fields([
 ]), CardController.create);
 cardRoutes.put("/update/:id", Auth, CardController.update);
 cardRoutes.get("/genres", CardController.genres);
-cardRoutes.get("/list", Auth, CardController.list);
+cardRoutes.get("/list", CardController.list);
 cardRoutes.get("/random", Auth, CardController.random);
-cardRoutes.get("/search", Auth, CardController.search);
-cardRoutes.get("/popular", Auth, CardController.popularCards);
-cardRoutes.get("/trending", Auth, CardController.trendingCards);
+cardRoutes.get("/search", CardController.search);
+cardRoutes.get("/popular", CardController.popularCards);
+cardRoutes.get("/trending", CardController.trendingCards);
 cardRoutes.get("/recently-played", Auth, CardController.playedCards);
 
 cardRoutes.get("/like/:id", Auth, CardController.likeCard);
