@@ -68,6 +68,7 @@ class AuthService {
             user.new_social_login = false
             if (gcid) await UserModel.update(email, {gcid})
             await UtilFunctions.tokenizeUser(user)
+            await UserModel.update(user.id, {refresh_token: user.refresh_token})
             return user
         } else {
             let created_user = await UserModel.create({
@@ -95,6 +96,7 @@ class AuthService {
             user.new_social_login = false
             if (gcid) await UserModel.update(payload.email, {gcid})
             await UtilFunctions.tokenizeUser(user)
+            await UserModel.update(user.id, {refresh_token: user.refresh_token})
             return user
         } else {
             let created_user = await UserModel.create({
@@ -130,6 +132,7 @@ class AuthService {
             user.new_social_login = false
             if (gcid) await UserModel.update(payload.sub, {gcid})
             await UtilFunctions.tokenizeUser(user)
+            await UserModel.update(user.id, {refresh_token: user.refresh_token})
             return user
         } else {
             let created_user = await UserModel.create({
