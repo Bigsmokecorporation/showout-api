@@ -1,13 +1,13 @@
 import UploadService from "../util/UploadService.js"
 
 class CardModel {
-    static async create(data) {
+    static async create(data, user) {
         let new_card = await DB('cards')
             .returning('*')
             .insert(data)
 
         if (new_card.length)
-            return CardModel.get(new_card[0].id)
+            return CardModel.get(new_card[0].id, user)
         return false
     }
 

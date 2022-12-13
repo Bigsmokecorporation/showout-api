@@ -56,7 +56,7 @@ class CardService {
             if (data.style)
                 data.style = JSON.parse(data.style)
 
-            let created_card = await CardModel.create(data)
+            let created_card = await CardModel.create(data, user)
 
             if (created_card)
                 return created_card
@@ -98,7 +98,7 @@ class CardService {
             if (data.style)
                 data.style = JSON.parse(data.style)
 
-            let created_card = await CardModel.create(data)
+            let created_card = await CardModel.create(data, user)
 
             if (created_card)
                 return created_card
