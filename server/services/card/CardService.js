@@ -59,7 +59,7 @@ class CardService {
             let created_card = await CardModel.create(data)
 
             if (created_card)
-                return CardModel.populateCardDetails(created_card, user)
+                return created_card
             else
                 return UtilFunctions.outputError(rs, 'An error occurred', {}, HttpStatus.INTERNAL_SERVER_ERROR)
 
@@ -101,7 +101,7 @@ class CardService {
             let created_card = await CardModel.create(data)
 
             if (created_card)
-                return CardModel.populateCardDetails(created_card, user)
+                return created_card
             else
                 return UtilFunctions.outputError(rs, 'An error occurred', {}, HttpStatus.INTERNAL_SERVER_ERROR)
 
