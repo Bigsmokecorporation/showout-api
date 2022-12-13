@@ -36,14 +36,17 @@ class CardModel {
         return false
     }
 
-    static async getMultiple(where = {}, whereNot = {}, user = {}, limit = 500) {
-        let default_query = await DB.select(['cards.*', 'genres.genre', 'users.stage_name'])
+    static async getMultiple(where = {}, whereNot = {}, whereIn = [], user = {}, limit = 500) {
+        let default_query = DB.select(['cards.*', 'genres.genre', 'users.stage_name'])
             .from('cards')
             .leftJoin('genres', 'cards.card_genre_id', '=', 'genres.id')
             .leftJoin('users', 'cards.owner_id', '=', 'users.id')
             .where(where)
             .whereNot(whereNot)
             .limit(limit)
+
+        if (Object.keys(whereIn).length)
+            default_query.whereIn(whereIn[0], whereIn[1])
 
         const cards = await default_query
         for (const card of cards) {

@@ -54,7 +54,7 @@ class PlaylistModel {
 
         if (cards.length) {
             const card_ids = cards.map(c => c.card_id)
-            const card_details = await DB.select('id', 'card_title', 'media_url', 'cover_art_url', 'media_demo_url')
+            const card_details = await DB.select('*')
                 .from('cards')
                 .whereIn('id', card_ids)
 
@@ -63,7 +63,6 @@ class PlaylistModel {
                     await CardModel.populateCardDetails(c)
                 playlist.track_list = card_details
             }
-
         }
     }
 

@@ -59,7 +59,7 @@ class CardService {
             let created_card = await CardModel.create(data)
 
             if (created_card)
-                return created_card
+                return CardModel.populateCardDetails(created_card, user)
             else
                 return UtilFunctions.outputError(rs, 'An error occurred', {}, HttpStatus.INTERNAL_SERVER_ERROR)
 
@@ -101,7 +101,7 @@ class CardService {
             let created_card = await CardModel.create(data)
 
             if (created_card)
-                return created_card
+                return CardModel.populateCardDetails(created_card, user)
             else
                 return UtilFunctions.outputError(rs, 'An error occurred', {}, HttpStatus.INTERNAL_SERVER_ERROR)
 
@@ -123,13 +123,13 @@ class CardService {
     }
 
     static async list(rq, user) {
-        return CardModel.getMultiple(rq.query, {}, user)
+        return CardModel.getMultiple(rq.query, {}, {}, user)
     }
 
     static async listRandom(rq, user) {
         return CardModel.getMultiple({}, {
             'owner_id': user.id
-        }, user)
+        }, {}, user)
     }
 
     static async search(keyword, user) {
@@ -141,13 +141,13 @@ class CardService {
     static async popularCards(rq, user) {
         return CardModel.getMultiple({}, {
             'owner_id': user.id
-        }, user)
+        }, {},  user)
     }
 
     static async trendingCards(rq, user) {
         return CardModel.getMultiple({}, {
             'owner_id': user.id
-        }, user)
+        }, {}, user)
     }
 
     static async playedCards(rq, user) {
@@ -155,11 +155,20 @@ class CardService {
             .from('plays')
             .where({user_id: user.id})
 
-        for (const card of playedCards) {
-            await CardModel.populateCardDetails(card, user)
+        if (playedCards.length) {
+            const card_ids = playedCards.map(c => c.card_id)
+
+            const card_details = await CardModel.getMultiple({}, {}, ['cards.id', card_ids], user)
+
+            if (card_details) {
+                for (const card of card_details)
+                    await CardModel.populateCardDetails(card, user)
+            }
+
+            return card_details
         }
 
-        return playedCards
+        return []
     }
 
     static async genres() {
