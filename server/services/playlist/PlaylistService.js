@@ -24,7 +24,7 @@ class PlaylistService {
     }
 
     static async list(rq, user) {
-        return PlaylistModel.getMultiple(rq.query, {}, user)
+        return PlaylistModel.getMultiple(rq.query, user)
     }
 
     static async create (rq) {
