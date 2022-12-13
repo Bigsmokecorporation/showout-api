@@ -23,7 +23,9 @@ export default (swagger) => {
                                     type: 'string',
                                     enum: [
                                         'png',
-                                        'jpg'
+                                        'jpg',
+                                        'jpeg',
+                                        'gif'
                                     ],
                                 },
                                 media_demo: {

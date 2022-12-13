@@ -39,7 +39,7 @@ class CardService {
             await UploadService.uploadFileInB64(buffer2, demo_file_name, 'audio/mpeg')
             data.media_demo_url = `${CONSTANTS.S3}${demo_file_name}`
 
-            const x = `media/cover/${id}.${data.cover_art_type}`
+            const x = `media/cover/${id}.${data.cover_art_type || 'jpg'}`
             const bufferx = Buffer.from(data.cover_art.replace(/^data:image\/\w+;base64,/, ""), 'base64')
             await UploadService.uploadFileInB64(bufferx, x, 'image/jpeg')
             data.cover_art_url = `${CONSTANTS.S3}${x}`
@@ -80,7 +80,7 @@ class CardService {
                 data.media_url = `${CONSTANTS.S3}${fileName}`
             }
             if (_.has(rq.files, 'cover_art')) {
-                const fileName = `media/cover/${id}.${data.cover_art_type}`
+                const fileName = `media/cover/${id}.${data.cover_art_type || 'jpg'}`
                 await UploadService.uploadFile(rq.files.cover_art[0], fileName)
                 data.cover_art_url = `${CONSTANTS.S3}${fileName}`
             }

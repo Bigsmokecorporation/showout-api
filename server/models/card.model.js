@@ -85,7 +85,7 @@ class CardModel {
         if (card.media_demo_url)
             card.media_demo_url = await UploadService.getSignedUrl(`media/crop/${card.id}.mp3`)
         if (card.cover_art_url)
-            card.cover_art_url = await UploadService.getSignedUrl(`media/cover/${card.id}.jpg`)
+            card.cover_art_url = await UploadService.getSignedUrl(`media/cover/${card.id}.${card.cover_art_type}`)
 
         if (user && user.id) {
             card.is_liked = await CardModel.isLiked(card.id, user.id)
