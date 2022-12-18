@@ -39,7 +39,7 @@ class UploadService {
         return s3.getSignedUrl('getObject', {
             Key: filename,
             Bucket: CONSTANTS.BUCKET,
-            Expires: 60 * 5
+            Expires: 3600 * 5
         })
     }
 }
