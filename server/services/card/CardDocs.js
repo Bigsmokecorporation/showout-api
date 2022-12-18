@@ -628,6 +628,15 @@ export default (swagger) => {
             genre: {
                 type: 'string',
             },
+            stage_name: {
+                type: 'string',
+            },
+            is_liked: {
+                type: 'boolean',
+            },
+            is_favorite: {
+                type: 'boolean',
+            }
         }
     }
     swagger.components.schemas['CardResponse'] = {

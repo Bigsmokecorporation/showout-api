@@ -53,5 +53,14 @@ export default {
                 },
             }
         }
+    },
+    LISTING_TYPES: {
+        GENERAL: 'general',
+        AUCTION: 'auction',
+        TRADE: 'trade'
+    },
+    LISTING_TARGETS: {
+        COMMUNITY: 'community',
+        DIRECT: 'direct'
     }
 }
