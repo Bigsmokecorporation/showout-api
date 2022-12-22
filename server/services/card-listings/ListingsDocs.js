@@ -173,15 +173,9 @@ export default (swagger) => {
                 type: 'string',
                 format: '$date'
             },
-            cover_art_url: {
-                type: 'string',
-            },
-            media_url: {
-                type: 'string',
-            },
-            media_demo_url: {
-                type: 'string',
-            },
+            card: {
+                $ref: '#/components/schemas/Card'
+            }
         }
     }
     swagger.components.schemas['CardListingResponse'] = {

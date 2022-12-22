@@ -13,7 +13,6 @@ class ListingModel {
 
     static async get(id, user) {
         let listings = await DB.select(['listings.*',
-            'cards.card_title','cards.media_url','cards.media_demo_url','cards.cover_art_url',
             'genres.genre', 'users.stage_name'])
             .from('listings')
             .leftJoin('cards', 'listings.card_id', '=', 'cards.id')
@@ -21,16 +20,15 @@ class ListingModel {
             .leftJoin('users', 'cards.owner_id', '=', 'users.id')
             .where({'listings.id': id})
         if (listings.length) {
-            const card = listings[0]
-            await CardModel.populateCardDetails(card, user)
-            return card
+            const listing = listings[0]
+            listing.card = await CardModel.get(listing.card_id, user)
+            return listing
         }
         return {}
     }
 
     static async getMultiple(where = {}, whereNot = {}, whereIn = [], user = {}, limit = 500) {
         let default_query = DB.select(['listings.*',
-            'cards.card_title','cards.media_url','cards.media_demo_url','cards.cover_art_url',
             'genres.genre', 'users.stage_name'])
             .from('listings')
             .leftJoin('cards', 'listings.card_id', '=', 'cards.id')
@@ -43,13 +41,13 @@ class ListingModel {
         if (Object.keys(whereIn).length)
             default_query.whereIn(whereIn[0], whereIn[1])
 
-        const cards = await default_query
+        const listings = await default_query
 
-        for (const card of cards) {
-            await CardModel.populateCardDetails(card, user)
+        for (const listing of listings) {
+            listing.card = await CardModel.get(listing.card_id, user)
         }
 
-        return cards
+        return listings
     }
 
 }
