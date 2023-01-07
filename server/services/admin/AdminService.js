@@ -29,6 +29,12 @@ class AdminService {
             await UtilFunctions.tokenizeUser(admin)
             await AdminModel.update(admin.id, {refresh_token: admin.refresh_token})
             rs.locals.user = admin
+
+            //  Create and send verification mail
+            const email_token = UtilFunctions.genOTP(4)
+            await UserModel.createVerification(admin.id, email_token)
+            await EmailModel.sendVerificationMail(admin.id, email_token, true)
+
             return admin
         }
     }
@@ -98,11 +104,12 @@ class AdminService {
             let admin = await AdminModel.create({...({id: UtilFunctions.genId()}), ...(data)})
 
             if (admin) {
+
+                //  Create and send verification mail
                 const email_token = UtilFunctions.genOTP(4)
                 await UserModel.createVerification(admin.id, email_token)
-
-                //send verification mail
                 await EmailModel.sendVerificationMail(admin.id, email_token, true)
+
                 return admin
             } else {
                 UtilFunctions.outputError(rs, 'An error occurred', {}, HttpStatus.INTERNAL_SERVER_ERROR)
