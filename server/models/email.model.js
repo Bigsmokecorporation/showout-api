@@ -1,6 +1,7 @@
 import mailer from '@sendgrid/mail'
 import UserModel from "./user.model.js"
 import HttpStatus from "../util/HttpStatus.js"
+import AdminModel from "./admin.model.js";
 
 class EmailModel {
 
@@ -47,8 +48,13 @@ class EmailModel {
         }
     }
 
-    static async sendVerificationMail (user_id, token) {
-        let user = await UserModel.get(user_id)
+    static async sendVerificationMail (user_id, token, admin = false) {
+        let user;
+        if (admin)
+            user = await AdminModel.get(user_id)
+        else
+            user = await UserModel.get(user_id)
+
         let verificationTemplate = process.env.PRE_SIGN_UP_OTP_VERIFICATION_TMP
         if (user.is_active)
             verificationTemplate = process.env.POST_SIGN_UP_OTP_VERIFICATION_TMP

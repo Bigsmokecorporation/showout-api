@@ -48,6 +48,46 @@ export default (swagger) => {
             }
         }
     }
+    swagger.paths['/admin/verify'] = {
+        post: {
+            tags: [
+                'Admin'
+            ],
+            description: 'Verifies email token',
+            requestBody: {
+                content: {
+                    'application/json': {
+                        schema: {
+                            type: 'object',
+                            properties: {
+                                id: {
+                                    type: 'string',
+                                    description: 'Id of user',
+                                    example: 'fc4y04sK9OiFjcbFZKB1'
+                                },
+                                token: {
+                                    type: 'string',
+                                    example: 123456
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            responses: {
+                200: {
+                    description: 'Successful verification.',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                $ref: '#/components/schemas/UserResponse'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     swagger.paths['/admin/update/{id}'] = {
         'put': {
             'tags': [

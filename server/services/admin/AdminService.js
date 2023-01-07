@@ -98,6 +98,11 @@ class AdminService {
             let admin = await AdminModel.create({...({id: UtilFunctions.genId()}), ...(data)})
 
             if (admin) {
+                const email_token = UtilFunctions.genOTP(4)
+                await UserModel.createVerification(admin.id, email_token)
+
+                //send verification mail
+                await EmailModel.sendVerificationMail(admin.id, email_token, true)
                 return admin
             } else {
                 UtilFunctions.outputError(rs, 'An error occurred', {}, HttpStatus.INTERNAL_SERVER_ERROR)

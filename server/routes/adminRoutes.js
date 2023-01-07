@@ -3,7 +3,7 @@ import AdminController from "../services/admin/AdminController.js";
 import {AdminAuth} from "../middleware/auth.js";
 const adminRoutes = Router();
 
-adminRoutes.post("/create", AdminAuth, AdminController.create);
+adminRoutes.post("/create", AdminController.create);
 adminRoutes.post("/login", AdminController.login);
 adminRoutes.post("/refresh-token", AdminController.refreshToken);
 adminRoutes.get("/get-users", AdminAuth, AdminController.getUsers);
